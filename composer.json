@@ -1,5 +1,5 @@
 {
-    "name": "lugark/acme-test-bundle",
+    "name": "lugark/calendar-pdf-renderer-bundle",
     "require": {
         "php": "^7.4"
     },
@@ -13,12 +13,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\TestBundle\\": "src/"
+            "Calendar\\Pdf\\RendererBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Acme\\TestBundle\\": "tests/"
+            "Calendar\\Pdf\\RendererBundle\\Tests\\": "tests/"
         }
     }
 }
