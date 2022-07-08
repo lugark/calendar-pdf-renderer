@@ -1,11 +1,14 @@
 {
     "name": "lugark/calendar-pdf-renderer-bundle",
     "require": {
-        "php": "^7.4"
+        "php": "^7.4",
+        "mpdf/mpdf": "^8.1",
+        "aeon-php/calendar": "^1.0"
     },
     "require-dev": {
         "symfony/http-kernel": "^5.4",
-        "symfony/dependency-injection": "^5.4"
+        "symfony/dependency-injection": "^5.4",
+        "phpstan/phpstan": "^1.8"
     },
     "suggest": {
         "symfony/dependency-injection": "",
