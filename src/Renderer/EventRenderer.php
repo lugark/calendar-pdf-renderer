@@ -2,7 +2,7 @@
 
 namespace Calendar\Pdf\RendererBundle\Renderer;
 
-use App\Calendar\Event;
+use Calendar\Pdf\RendererBundle\Event\Event;
 use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\EventTypeRendererException;
 use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\EventTypeRendererInterface;
 use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
