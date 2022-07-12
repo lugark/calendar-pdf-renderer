@@ -8,7 +8,8 @@
     "require-dev": {
         "symfony/http-kernel": "^5.4",
         "symfony/dependency-injection": "^5.4",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^1.8",
+        "symfony/phpunit-bridge": "^6.1"
     },
     "suggest": {
         "symfony/dependency-injection": "",
