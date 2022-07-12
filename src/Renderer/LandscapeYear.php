@@ -136,12 +136,6 @@ class LandscapeYear extends MpdfRendererAbstract
         return $colorData;
     }
 
-    public function setCalendarEvents($events): RendererInterface
-    {
-        $this->calendarEvents = $events;
-        return $this;
-    }
-
     public function getRenderInformation(): RenderInformationInterface
     {
         return new LandscapeYearInformation();

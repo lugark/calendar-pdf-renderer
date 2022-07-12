@@ -5,7 +5,6 @@ namespace Calendar\Pdf\Renderer\Renderer;
 use Aeon\Calendar\Gregorian\TimePeriod;
 use Aeon\Calendar\Gregorian\DateTime;
 use Calendar\Pdf\Renderer\Event\Events;
-use Calendar\Pdf\Renderer\Renderer\RenderRequest\RequestTypes;
 use DateInterval;
 
 class RenderRequest
@@ -21,10 +20,6 @@ class RenderRequest
 
     public function __construct(string $requestType, \DateTime $startDate, \DateTime $endDate = null)
     {
-        if (!RequestTypes::isValidRequestType($requestType)) {
-            throw new RendererException('Not a valid render request type: ' . $requestType);
-        }
-
         if (empty($endDate)) {
             $endDate = clone $startDate;
             $endDate->add(new DateInterval("P" . self::DEFAULT_RENDERED_MONTHS . "M"));
