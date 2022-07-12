@@ -1,12 +1,12 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Tests\Event;
+namespace Calendar\Pdf\Renderer\Tests\Event;
 
 use Aeon\Calendar\Gregorian\DateTime;
-use Calendar\Pdf\RendererBundle\Event\Event;
-use Calendar\Pdf\RendererBundle\Event\EventException;
-use Calendar\Pdf\RendererBundle\Event\Events;
-use Calendar\Pdf\RendererBundle\Event\Types;
+use Calendar\Pdf\Renderer\Event\Event;
+use Calendar\Pdf\Renderer\Event\EventException;
+use Calendar\Pdf\Renderer\Event\Events;
+use Calendar\Pdf\Renderer\Event\Types;
 use PHPUnit\Framework\TestCase;
 
 class EventsTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer\RenderRequest;
+namespace Calendar\Pdf\Renderer\Renderer\RenderRequest;
 
 use ReflectionClass;
 

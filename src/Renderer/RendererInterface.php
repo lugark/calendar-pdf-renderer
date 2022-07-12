@@ -1,8 +1,8 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 use Mpdf\Mpdf;
 
 interface RendererInterface

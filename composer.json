@@ -1,5 +1,6 @@
 {
-    "name": "lugark/calendar-pdf-renderer-bundle",
+    "name": "lugark/calendar-pdf-renderer",
+    "type": "library",
     "require": {
         "php": "^7.4",
         "mpdf/mpdf": "^8.1",
@@ -17,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Calendar\\Pdf\\RendererBundle\\": "src/"
+            "Calendar\\Pdf\\Renderer\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Calendar\\Pdf\\RendererBundle\\Tests\\": "tests/"
+            "Calendar\\Pdf\\Renderer\\Tests\\": "tests/"
         }
     }
 }

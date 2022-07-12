@@ -1,9 +1,9 @@
 <?php
 require dirname(__DIR__).'/vendor/autoload.php';
 
-use Calendar\Pdf\RendererBundle\Renderer\CalendarRenderer;
-use Calendar\Pdf\RendererBundle\Renderer\RenderRequest;
-use Calendar\Pdf\RendererBundle\Renderer\RenderRequest\RequestTypes;
+use Calendar\Pdf\Renderer\Renderer\CalendarRenderer;
+use Calendar\Pdf\Renderer\Renderer\RenderRequest;
+use Calendar\Pdf\Renderer\Renderer\RenderRequest\RequestTypes;
 
 /**
  * Create a render request defining the type and the start from where to render

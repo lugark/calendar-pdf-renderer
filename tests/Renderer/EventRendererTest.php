@@ -1,12 +1,12 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Tests\Renderer;
+namespace Calendar\Pdf\Renderer\Tests\Renderer;
 
-use Calendar\Pdf\RendererBundle\Event\Event;
-use Calendar\Pdf\RendererBundle\Renderer\EventRenderer;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\EventTypeRendererInterface;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\AbstractRenderInformation;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Event\Event;
+use Calendar\Pdf\Renderer\Renderer\EventRenderer;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererInterface;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\AbstractRenderInformation;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 use Mpdf\Mpdf;
 use PHPUnit\Framework\TestCase;
 
@@ -62,7 +62,7 @@ class EventRendererTest extends TestCase
     public function testRenderFail()
     {
         $event = new Event('TestFail');
-        $this->expectException('Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\EventTypeRendererException');
+        $this->expectException('Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererException');
 
         $this->sut->registerRenderer($this->mockRenderer);
         $this->sut->renderEvents([$event], $this->mockRenderInformation);

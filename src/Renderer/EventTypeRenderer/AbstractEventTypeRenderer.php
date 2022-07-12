@@ -1,6 +1,6 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer;
+namespace Calendar\Pdf\Renderer\Renderer\EventTypeRenderer;
 
 use Mpdf\Mpdf;
 

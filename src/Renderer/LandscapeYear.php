@@ -1,14 +1,14 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
 use Aeon\Calendar\Gregorian\Day;
-use Calendar\Pdf\RendererBundle\Event\Events;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\LandscapeYear\PublicHolidayRenderer;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\LandscapeYear\SchoolHolidayRenderer;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\LandscapeYearInformation;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
-use Calendar\Pdf\RendererBundle\Service\RenderUtils;
+use Calendar\Pdf\Renderer\Event\Events;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\PublicHolidayRenderer;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\SchoolHolidayRenderer;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Service\RenderUtils;
 use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
 

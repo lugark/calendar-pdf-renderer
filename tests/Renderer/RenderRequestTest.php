@@ -1,10 +1,10 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Tests\Renderer;
+namespace Calendar\Pdf\Renderer\Tests\Renderer;
 
 use Aeon\Calendar\Gregorian\DateTime;
 use Aeon\Calendar\Gregorian\TimePeriod;
-use Calendar\Pdf\RendererBundle\Renderer\RenderRequest;
+use Calendar\Pdf\Renderer\Renderer\RenderRequest;
 use PHPUnit\Framework\TestCase;
 
 class RenderRequestTest extends TestCase

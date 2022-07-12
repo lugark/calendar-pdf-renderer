@@ -1,11 +1,11 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
 use Aeon\Calendar\Gregorian\TimePeriod;
 use Aeon\Calendar\Gregorian\DateTime;
-use Calendar\Pdf\RendererBundle\Event\Events;
-use Calendar\Pdf\RendererBundle\Renderer\RenderRequest\RequestTypes;
+use Calendar\Pdf\Renderer\Event\Events;
+use Calendar\Pdf\Renderer\Renderer\RenderRequest\RequestTypes;
 use DateInterval;
 
 class RenderRequest
