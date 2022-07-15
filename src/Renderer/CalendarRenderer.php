@@ -2,9 +2,8 @@
 
 namespace Calendar\Pdf\Renderer\Renderer;
 
-use Calendar\Pdf\Renderer\Event\Events;
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererInterface;
-use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
+use Mpdf\Mpdf;
 
 class CalendarRenderer
 {
@@ -14,8 +13,10 @@ class CalendarRenderer
     public function renderCalendar(RenderRequest $renderRequest): ?string
     {
         $this->renderer = self::getRendererByRequest($renderRequest);
-        $this->eventRenderer = self::initEventRenderer($this->renderer);
-        $this->eventRenderer->setPdfRenderClass($this->renderer->initRenderer());
+        $this->eventRenderer = self::initEventRenderer(
+            $this->renderer,
+            $this->renderer->initRenderer()
+        );
 
         $this->renderer->renderCalendar($renderRequest);
         $this->renderEvents($renderRequest);
@@ -23,34 +24,28 @@ class CalendarRenderer
         return $this->renderer->getOutput();
     }
 
-    public function setCalendarEvents($events): void
-    {
-        $this->events = $events;
-    }
-
     public static function getRendererByRequest(RenderRequest $renderRequest): RendererInterface
     {
-        $renderClassType = $renderRequest->getRequestType();
-        $rendererReflection = new \ReflectionClass($renderClassType);
-        if (!$rendererReflection->implementsInterface(RendererInterface::class)) {
-            throw new RendererException('Can not find class to render: ' . $rendererReflection->getName());
-        }
-
+        $renderClassType = ($renderRequest->getRequestType());
         return new $renderClassType();
     }
 
-    public static function initEventRenderer(RendererInterface $renderer): EventRenderer
+    public static function initEventRenderer(RendererInterface $renderer, Mpdf $mpdf): EventRenderer
     {
         $eventRenderer = new EventRenderer();
-        foreach ($renderer->getSupportedEventRenderer() as $supportedRenderers) {
-            if ($supportedRenderers instanceof EventTypeRendererInterface) {
-                $eventRenderer->registerRenderer(new $supportedRenderers);
+        $eventRenderer->setPdfRenderClass($mpdf);
+        foreach ($renderer->getSupportedEventRenderer() as $supportedRenderer) {
+            $reflection = new \ReflectionClass($supportedRenderer);
+            if ($reflection->implementsInterface(EventTypeRendererInterface::class)) {
+                $eventRenderer->registerRenderer(new $supportedRenderer());
+            } else {
+                throw new RendererException('Not a supported event type renderer: ' . $supportedRenderer);
             }
         }
         return $eventRenderer;
     }
 
-    private function renderEvents(RenderRequest $renderRequest):void
+    protected function renderEvents(RenderRequest $renderRequest):void
     {
         $events = $renderRequest->getEvents();
         if (empty($events) || count($events) == 0) {

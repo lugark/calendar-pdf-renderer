@@ -20,6 +20,10 @@ class RenderRequest
 
     public function __construct(string $requestType, \DateTime $startDate, \DateTime $endDate = null)
     {
+        if (!self::isValidRendererClass($requestType)) {
+            throw new RendererException('Not a valid render type: ' . $requestType);
+        }
+
         if (empty($endDate)) {
             $endDate = clone $startDate;
             $endDate->add(new DateInterval("P" . self::DEFAULT_RENDERED_MONTHS . "M"));
@@ -78,5 +82,20 @@ class RenderRequest
     public function setEvents(?Events $events): RenderRequest
     {
         $this->events = $events;
+        return $this;
+    }
+
+    public static function isValidRendererClass(string $renderer): bool
+    {
+        if (!class_exists($renderer)) {
+            return false;
+        }
+
+        $rendererReflection = new \ReflectionClass($renderer);
+        if (!$rendererReflection->implementsInterface(RendererInterface::class)) {
+            return false;
+        }
+
+        return true;
     }
 }
