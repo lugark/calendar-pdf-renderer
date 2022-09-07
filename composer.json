@@ -25,5 +25,8 @@
         "psr-4": {
             "Calendar\\Pdf\\Renderer\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "unit-test": "vendor/bin/simple-phpunit"
     }
 }
