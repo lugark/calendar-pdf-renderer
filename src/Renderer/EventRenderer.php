@@ -1,11 +1,11 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
-use App\Calendar\Event;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\EventTypeRendererException;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\EventTypeRendererInterface;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Event\Event;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererException;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererInterface;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 use Mpdf\Mpdf;
 
 class EventRenderer

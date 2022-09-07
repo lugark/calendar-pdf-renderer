@@ -1,9 +1,10 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 use Mpdf\Mpdf;
+use Psr\Log\AbstractLogger;
 
 abstract class MpdfRendererAbstract implements RendererInterface
 {
@@ -32,17 +33,11 @@ abstract class MpdfRendererAbstract implements RendererInterface
     protected EventRenderer $eventRenderer;
     protected RenderRequest $renderRequest;
 
-    public function __construct(EventRenderer $eventRenderer)
-    {
-        $this->eventRenderer = $eventRenderer;
-        $this->initRenderer();
-    }
-
     protected function initMpdf(array $options=[], string $displaymode='fullpage' ): void
     {
         $this->mpdf = new Mpdf($options);
 
-        $this->mpdf->setLogger(new class extends \Psr\Log\AbstractLogger {
+        $this->mpdf->setLogger(new class extends AbstractLogger {
             public function log($level, $message, $context=[])
             {
                 echo $level . ': ' . $message . PHP_EOL;

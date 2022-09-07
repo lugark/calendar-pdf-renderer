@@ -1,11 +1,11 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\LandscapeYear;
+namespace Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear;
 
-use Calendar\Pdf\RendererBundle\Event\Event;
-use Calendar\Pdf\RendererBundle\Event\Types;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\AbstractEventTypeRenderer;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Event\Event;
+use Calendar\Pdf\Renderer\Event\Types;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\AbstractEventTypeRenderer;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 
 class PublicHolidayRenderer extends AbstractEventTypeRenderer
 {

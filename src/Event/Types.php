@@ -1,6 +1,6 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Event;
+namespace Calendar\Pdf\Renderer\Event;
 
 class Types
 {

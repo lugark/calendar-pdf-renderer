@@ -1,6 +1,6 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
 class RendererException extends \Exception
 {

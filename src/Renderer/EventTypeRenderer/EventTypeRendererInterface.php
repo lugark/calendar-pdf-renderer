@@ -1,9 +1,9 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer;
+namespace Calendar\Pdf\Renderer\Renderer\EventTypeRenderer;
 
-use Calendar\Pdf\RendererBundle\Event\Event;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Event\Event;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 
 interface EventTypeRendererInterface
 {

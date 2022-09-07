@@ -1,15 +1,15 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
 use Aeon\Calendar\Gregorian\Day;
-use Aeon\Calendar\Gregorian\Month;
-use Calendar\Pdf\RendererBundle\Event\Events;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\LandscapeYear\PublicHolidayRenderer;
-use Calendar\Pdf\RendererBundle\Renderer\EventTypeRenderer\LandscapeYear\SchoolHolidayRenderer;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\LandscapeYearInformation;
-use Calendar\Pdf\RendererBundle\Renderer\RenderInformation\RenderInformationInterface;
-use Calendar\Pdf\RendererBundle\Service\RenderUtils;
+use Calendar\Pdf\Renderer\Event\Events;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\PublicHolidayRenderer;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\SchoolHolidayRenderer;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
+use Calendar\Pdf\Renderer\Service\RenderUtils;
+use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
 
 class LandscapeYear extends MpdfRendererAbstract
@@ -22,9 +22,6 @@ class LandscapeYear extends MpdfRendererAbstract
     const COLOR_FILL_SA = '#F8E6E6';
     const COLOR_FILL_SO = '#F3D5D5';
 
-    /** @var Events */
-    private $calendarEvents;
-
     private $fillColorWeekday = [
         6 => self::COLOR_FILL_SA,
         7 => self::COLOR_FILL_SO
@@ -32,7 +29,7 @@ class LandscapeYear extends MpdfRendererAbstract
 
     protected LandscapeYearInformation $renderInformation;
 
-    public function initRenderer()
+    public function initRenderer(): Mpdf
     {
         $this->initMpdf([
             'format' => 'A4-L',
@@ -44,18 +41,15 @@ class LandscapeYear extends MpdfRendererAbstract
         $this->mpdf->AddPage();
         $this->mpdf->SetFont('Helvetica');
 
-        $this->eventRenderer->setPdfRenderClass($this->mpdf);
-        $this->eventRenderer->registerRenderer(new SchoolHolidayRenderer());
-        $this->eventRenderer->registerRenderer(new PublicHolidayRenderer());
+        return $this->mpdf;
     }
 
-    public function renderCalendar(RenderRequest $renderRequest): ?string
+    public function renderCalendar(RenderRequest $renderRequest): RendererInterface
     {
         $this->renderRequest = $renderRequest;
         $this->renderInformation = $this->calculateDimensions();
         $this->renderHeader();
         $this->renderData();
-        $this->renderEvents();
 
         $redBorder = RenderUtils::hex2rgb(self::COLOR_BORDER_TABLE);
         $this->mpdf->SetDrawColor($redBorder[0], $redBorder[1], $redBorder[2]);
@@ -66,12 +60,7 @@ class LandscapeYear extends MpdfRendererAbstract
             31 * $this->renderInformation->getRowHeight() + $this->headerHeight + 2
         );
 
-        if ($this->renderRequest->doRenderToFile()) {
-            $this->mpdf->Output($this->renderRequest->getRenderFile(), Destination::FILE);
-            return '';
-        } else {
-            return $this->mpdf->Output();
-        }
+        return $this;
     }
 
     private function renderHeader()
@@ -103,7 +92,6 @@ class LandscapeYear extends MpdfRendererAbstract
         $this->mpdf->SetTextColor(0, 0, 0);
         $startHeight = $this->mpdf->tMargin + $this->renderInformation->getHeaderHeight();
 
-        /** @var Month $month */
         foreach ($this->renderInformation->getMonthsToRender() as $month) {
             /** @var Day $day */
             foreach ($month->days()->all() as $day) {
@@ -148,26 +136,6 @@ class LandscapeYear extends MpdfRendererAbstract
         return $colorData;
     }
 
-    public function setCalendarEvents($events): void
-    {
-     $this->calendarEvents = $events;
-    }
-
-    private function renderEvents():void
-    {
-        if (empty($this->calendarEvents)) {
-            return;
-        }
-
-        $this->eventRenderer->renderEvents(
-            $this->calendarEvents->getEventsByRange(
-                $this->renderInformation->getCalendarStartsAt(),
-                $this->renderInformation->getCalendarEndsAt()
-            ),
-            $this->renderInformation
-        );
-    }
-
     public function getRenderInformation(): RenderInformationInterface
     {
         return new LandscapeYearInformation();
@@ -195,4 +163,21 @@ class LandscapeYear extends MpdfRendererAbstract
         return $landscapeRenderInformation;
     }
 
+    public function getSupportedEventRenderer(): array
+    {
+        return [
+            PublicHolidayRenderer::class,
+            SchoolHolidayRenderer::class
+        ];
+    }
+
+    public function getOutput(): ?string
+    {
+        if ($this->renderRequest->doRenderToFile()) {
+            $this->mpdf->Output($this->renderRequest->getRenderFile(), Destination::FILE);
+            return '';
+        } else {
+            return $this->mpdf->Output();
+        }
+    }
 }

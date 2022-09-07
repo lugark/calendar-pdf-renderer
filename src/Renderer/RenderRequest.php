@@ -1,11 +1,10 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer;
+namespace Calendar\Pdf\Renderer\Renderer;
 
 use Aeon\Calendar\Gregorian\TimePeriod;
 use Aeon\Calendar\Gregorian\DateTime;
-use Calendar\Pdf\RendererBundle\Event\Events;
-use Calendar\Pdf\RendererBundle\Renderer\RenderRequest\RequestTypes;
+use Calendar\Pdf\Renderer\Event\Events;
 use DateInterval;
 
 class RenderRequest
@@ -21,8 +20,8 @@ class RenderRequest
 
     public function __construct(string $requestType, \DateTime $startDate, \DateTime $endDate = null)
     {
-        if (!RequestTypes::isValidRequestType($requestType)) {
-            throw new RendererException('Not a valid render request type: ' . $requestType);
+        if (!self::isValidRendererClass($requestType)) {
+            throw new RendererException('Not a valid render type: ' . $requestType);
         }
 
         if (empty($endDate)) {
@@ -83,5 +82,20 @@ class RenderRequest
     public function setEvents(?Events $events): RenderRequest
     {
         $this->events = $events;
+        return $this;
+    }
+
+    public static function isValidRendererClass(string $renderer): bool
+    {
+        if (!class_exists($renderer)) {
+            return false;
+        }
+
+        $rendererReflection = new \ReflectionClass($renderer);
+        if (!$rendererReflection->implementsInterface(RendererInterface::class)) {
+            return false;
+        }
+
+        return true;
     }
 }

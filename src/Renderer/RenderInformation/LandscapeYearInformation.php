@@ -1,6 +1,6 @@
 <?php
 
-namespace Calendar\Pdf\RendererBundle\Renderer\RenderInformation;
+namespace Calendar\Pdf\Renderer\Renderer\RenderInformation;
 
 use Aeon\Calendar\Gregorian\Interval;
 use Aeon\Calendar\Gregorian\Month;
