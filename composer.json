@@ -1,8 +1,10 @@
 {
     "name": "lugark/calendar-pdf-renderer",
     "type": "library",
+    "description": "to generate pdf calendars with custom events & holidays",
+    "license": "MIT",    
     "require": {
-        "php": "^7.4",
+        "php": "^8.1",
         "mpdf/mpdf": "^8.1",
         "aeon-php/calendar": "^1.0"
     },
@@ -10,7 +12,8 @@
         "symfony/http-kernel": "^5.4",
         "symfony/dependency-injection": "^5.4",
         "phpstan/phpstan": "^1.8",
-        "symfony/phpunit-bridge": "^6.1"
+        "symfony/phpunit-bridge": "^6.1",
+        "phpstan/phpstan-symfony": "^1.2"
     },
     "suggest": {
         "symfony/dependency-injection": "",
@@ -27,6 +30,11 @@
         }
     },
     "scripts": {
-        "unit-test": "vendor/bin/simple-phpunit"
+        "phpunit": "vendor/bin/simple-phpunit -c phpunit.xml.dist",
+        "phpstan": "vendor/bin/phpstan analyze -c phpstan.neon --memory-limit 2G",
+        "test": [
+            "@phpstan",
+            "@phpunit"
+        ]
     }
 }

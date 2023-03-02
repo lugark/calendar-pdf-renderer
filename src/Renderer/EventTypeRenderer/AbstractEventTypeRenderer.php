@@ -2,14 +2,15 @@
 
 namespace Calendar\Pdf\Renderer\Renderer\EventTypeRenderer;
 
+use Calendar\Pdf\Renderer\Renderer\PdfRenderer;
 use Mpdf\Mpdf;
 
 abstract class AbstractEventTypeRenderer implements EventTypeRendererInterface
 {
-    protected Mpdf $mpdf;
+    protected PdfRenderer $pdfRenderer;
 
-    public function setPdfRendererClass($pdfClass): void
+    public function setPdfGenerator(PdfRenderer $pdfRenderer): void
     {
-        $this->mpdf = $pdfClass;
+        $this->pdfRenderer = $pdfRenderer;
     }
 }

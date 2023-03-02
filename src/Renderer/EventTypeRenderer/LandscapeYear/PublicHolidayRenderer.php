@@ -5,6 +5,8 @@ namespace Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear;
 use Calendar\Pdf\Renderer\Event\Event;
 use Calendar\Pdf\Renderer\Event\Types;
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\AbstractEventTypeRenderer;
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererException;
+use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 
 class PublicHolidayRenderer extends AbstractEventTypeRenderer
@@ -13,6 +15,15 @@ class PublicHolidayRenderer extends AbstractEventTypeRenderer
 
     public function render(Event $event, RenderInformationInterface $calendarRenderInformation): void
     {
+        if (!($calendarRenderInformation instanceof LandscapeYearInformation))
+        {
+            throw new EventTypeRendererException(
+                self::class .
+                ' only supports rendering ' .
+                LandscapeYearInformation::class
+            );
+        }
+
         $this->mpdf->SetFontSize(self::FONT_SIZE_HOLIDAY);
         $this->mpdf->SetFont('', 'B');
         $this->mpdf->SetTextColor(199, 50, 50);

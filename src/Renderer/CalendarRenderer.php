@@ -9,13 +9,22 @@ class CalendarRenderer
 {
     protected ?RendererInterface $renderer;
     protected ?EventRenderer $eventRenderer;
+    protected PdfRenderer $pdfRenderer;
+
+    public function __construct(PdfRenderer $pdfRenderer)
+    {
+        $this->pdfRenderer = $pdfRenderer;
+    }
 
     public function renderCalendar(RenderRequest $renderRequest): ?string
     {
-        $this->renderer = self::getRendererByRequest($renderRequest);
+        $this->renderer = self::getRendererByRequest(
+            $renderRequest,
+            $this->pdfRenderer
+        );
         $this->eventRenderer = self::initEventRenderer(
             $this->renderer,
-            $this->renderer->initRenderer()
+            $this->pdfRenderer
         );
 
         $this->renderer->renderCalendar($renderRequest);
@@ -24,16 +33,16 @@ class CalendarRenderer
         return $this->renderer->getOutput();
     }
 
-    public static function getRendererByRequest(RenderRequest $renderRequest): RendererInterface
+    public static function getRendererByRequest(RenderRequest $renderRequest, PdfRenderer $pdfRenderer): RendererInterface
     {
         $renderClassType = ($renderRequest->getRequestType());
-        return new $renderClassType();
+        return new $renderClassType($pdfRenderer);
     }
 
-    public static function initEventRenderer(RendererInterface $renderer, Mpdf $mpdf): EventRenderer
+    public static function initEventRenderer(RendererInterface $renderer, PdfRenderer $pdfRenderer): EventRenderer
     {
         $eventRenderer = new EventRenderer();
-        $eventRenderer->setPdfRenderClass($mpdf);
+        $eventRenderer->setPdfGenerator($pdfRenderer);
         foreach ($renderer->getSupportedEventRenderer() as $supportedRenderer) {
             $reflection = new \ReflectionClass($supportedRenderer);
             if ($reflection->implementsInterface(EventTypeRendererInterface::class)) {

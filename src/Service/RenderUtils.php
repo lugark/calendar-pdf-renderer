@@ -26,7 +26,7 @@ class RenderUtils
 
     public static function getMonthLocalized(Month $month, bool $includeYear = false): string
     {
-        $text = strftime('%B', $month->toDateTimeImmutable()->getTimestamp());
+        $text = date('%B', $month->toDateTimeImmutable()->getTimestamp());
         if (!$includeYear) {
             return $text;
         }
@@ -36,6 +36,6 @@ class RenderUtils
 
     public static function getDayOfWeekLocalized(Day $day): string
     {
-        return strftime('%a', $day->toDateTimeImmutable()->getTimestamp());
+        return date('%a', $day->toDateTimeImmutable()->getTimestamp());
     }
 }

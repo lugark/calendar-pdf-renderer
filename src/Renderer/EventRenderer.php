@@ -13,17 +13,16 @@ class EventRenderer
     /** @var EventTypeRendererInterface[] */
     protected array $renderer = [];
 
-    /** @var Mpdf */
-    protected $mpdf;
+    protected PdfRenderer $pdfGenerator;
 
-    public function setPdfRenderClass($pdfClass): void
+    public function setPdfGenerator(PdfRenderer $pdfGenerator): void
     {
-        $this->mpdf = $pdfClass;
+        $this->pdfGenerator = $pdfGenerator;
     }
 
     public function registerRenderer(EventTypeRendererInterface $eventRenderer)
     {
-        $eventRenderer->setPdfRendererClass($this->mpdf);
+        $eventRenderer->setPdfGenerator($this->pdfGenerator);
         $this->renderer[$eventRenderer->getRenderType()] = $eventRenderer;
     }
 

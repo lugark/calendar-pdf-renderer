@@ -30,7 +30,7 @@ class LandscapeYearInformation extends AbstractRenderInformation
         return $this->headerHeight;
     }
 
-    public function setHeaderHeight(float $headerHeight): AbstractRenderInformation
+    public function setHeaderHeight(float $headerHeight): LandscapeYearInformation
     {
         $this->headerHeight = $headerHeight;
         return $this;
@@ -41,7 +41,7 @@ class LandscapeYearInformation extends AbstractRenderInformation
         return $this->columnWidth;
     }
 
-    public function setColumnWidth(float $columnWidth): AbstractRenderInformation
+    public function setColumnWidth(float $columnWidth): LandscapeYearInformation
     {
         $this->columnWidth = $columnWidth;
         return $this;
@@ -52,7 +52,7 @@ class LandscapeYearInformation extends AbstractRenderInformation
         return $this->rowHeight;
     }
 
-    public function setRowHeight(float $rowHeight): AbstractRenderInformation
+    public function setRowHeight(float $rowHeight): LandscapeYearInformation
     {
         $this->rowHeight = $rowHeight;
         return $this;

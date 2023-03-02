@@ -22,9 +22,9 @@ To render a calendar you need to create a render request object. This contains a
 - Startdate of the calendar (DateTime)
 ```
 $renderRequest = new RenderRequest(
-    RequestTypes::LANDSCAPE_YEAR,
-    new DateTime('2021-01')
-);
+        LandscapeYear::class,
+        new DateTime('2021-01')
+    );
 ```
 
 The request is passed to the render service that creates the pdf:
