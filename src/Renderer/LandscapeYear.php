@@ -3,14 +3,14 @@
 namespace Calendar\Pdf\Renderer\Renderer;
 
 use Aeon\Calendar\Gregorian\Day;
-use Calendar\Pdf\Renderer\Event\Events;
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\PublicHolidayRenderer;
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\SchoolHolidayRenderer;
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
-use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
 use Calendar\Pdf\Renderer\Service\RenderUtils;
-use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
+use Calendar\Pdf\Renderer\Renderer\PdfSettings;
+use Calendar\Pdf\Renderer\Renderer\StyleSettings\CellStyle;
+use Calendar\Pdf\Renderer\Renderer\StyleSettings\FontStyle;
 
 class LandscapeYear implements RendererInterface
 {
@@ -38,6 +38,8 @@ class LandscapeYear implements RendererInterface
 
     protected PdfRenderer $pdfRenderer;
 
+    private RenderRequest $renderRequest;
+
     public function __construct(PdfRenderer $pdfRenderer)
     {
         $this->pdfRenderer = $pdfRenderer;
@@ -45,14 +47,14 @@ class LandscapeYear implements RendererInterface
 
     protected function initRenderer()
     {
-        $this->pdfRenderer->initMpdf(
-            [
-                'format' => 'A4-L',
-                'margin_left' => self::MARGIN_LEFT,
-                'margin_right' => self::MARGIN_RIGHT,
-                'margin_top' => self::MARGIN_TOP,
-                'margin_bottom' => self::MARGIN_BOTTOM,
-            ],
+        $this->pdfRenderer->initPdf(
+            new PdfSettings(
+                'A4-L',
+                self::MARGIN_RIGHT,
+                self::MARGIN_LEFT,
+                self::MARGIN_TOP,
+                self::MARGIN_BOTTOM
+            )
         );
     }
 
@@ -61,15 +63,13 @@ class LandscapeYear implements RendererInterface
         $this->initRenderer();
         $this->renderRequest = $renderRequest;
         $this->renderInformation = $this->calculateDimensions();
-        $pdfGenerator = $this->pdfRenderer->getPdfGenerator();
         $this->renderHeader();
         $this->renderData();
 
-        $redBorder = RenderUtils::hex2rgb(self::COLOR_BORDER_TABLE);
-        $pdfGenerator->SetDrawColor($redBorder[0], $redBorder[1], $redBorder[2]);
-        $pdfGenerator->Rect(
-            $pdfGenerator->lMargin-2,
-            $pdfGenerator->tMargin,
+        $this->pdfRenderer->drawRectangle(
+            self::COLOR_BORDER_TABLE,
+            $this->renderInformation->getLeft()-2,
+            $this->renderInformation->getTop(),
             $this->renderInformation->numberOfMonthsToRender() * $this->renderInformation->getColumnWidth() + 2,
             31 * $this->renderInformation->getRowHeight() + self::HEADER_HEIGHT + 2
         );
@@ -79,57 +79,54 @@ class LandscapeYear implements RendererInterface
 
     private function renderHeader()
     {
-        $pdfGenerator = $this->pdfRenderer->getPdfGenerator();
-        $pdfGenerator->SetFontSize(self::FONT_SIZE_HEADER);
-        $pdfGenerator->SetFont('', 'B');
-        $borderColor = RenderUtils::hex2rgb(self::COLOR_BORDER_HEADER);
-        $textColor = RenderUtils::hex2rgb(self::COLOR_TEXT_HEADER);
-        $pdfGenerator->SetDrawColor($borderColor[0], $borderColor[1], $borderColor[2]);
-        $pdfGenerator->SetTextColor($textColor[0], $textColor[1], $textColor[2]);
+        $cellStyle = new CellStyle(
+            new FontStyle('', 'B', self::FONT_SIZE_HEADER),
+            self::COLOR_TEXT_HEADER, 
+            0, 
+            self::COLOR_BORDER_HEADER, 
+            'C',
+            0,
+        );
 
         $includeYear = !$this->renderInformation->doesCrossYear();
 
         foreach ($this->renderInformation->getMonthsToRender() as $month) {
-            $pdfGenerator->WriteCell(
+            $this->pdfRenderer->writeTextInCell(
+                $cellStyle,
                 $this->renderInformation->getColumnWidth() ,
                 self::HEADER_HEIGHT ,
                 RenderUtils::getMonthLocalized($month, $includeYear),
-                'B',
-                0,
-                'C'
             );
         }
     }
 
     public function renderData(): void
     {
-        $pdfGenerator = $this->pdfRenderer->getPdfGenerator();
-        $pdfGenerator->SetFontSize(self::FONT_SIZE_CELL);
-        $pdfGenerator->SetTextColor(0, 0, 0);
-        $startHeight = $pdfGenerator->tMargin + $this->renderInformation->getHeaderHeight();
+        $cellStyle = new CellStyle(
+            new FontStyle('', 'B', self::FONT_SIZE_CELL),
+            '#000000', 
+            'B', 
+            self::COLOR_BORDER_HEADER, 
+            'L',
+            0,
+        );
+        $startHeight = $this->renderInformation->getTop() + $this->renderInformation->getHeaderHeight();
 
         foreach ($this->renderInformation->getMonthsToRender() as $month) {
             /** @var Day $day */
             foreach ($month->days()->all() as $day) {
-                $pdfGenerator->SetXY(
-                    $pdfGenerator->lMargin + (($month->number()-1) * $this->renderInformation->getColumnWidth() ),
-                    $startHeight + (($day->number()-1) * $this->renderInformation->getRowHeight() )
-                );
-
                 $text = $day->number() . ' ' . RenderUtils::getDayOfWeekLocalized($day);
                 $colorData = $this->getDayColorData($day);
-                if ($colorData['fill']) {
-                    $pdfGenerator->SetFillColor($colorData['color'][0], $colorData['color'][1], $colorData['color'][2]);
-                }
-
-                $pdfGenerator->Cell(
-                    $this->renderInformation->getColumnWidth() -1,
-                    $this->renderInformation->getRowHeight()  ,
-                    $text,
-                    'B',
-                    0,
-                    '',
-                    $colorData['fill']);
+                $cellStyle->setFill($colorData['fill']); 
+                $cellStyle->setFillColor($colorData['hexColor']);
+                $this->pdfRenderer->writeTextInCellAtXY(
+                    $cellStyle,
+                    $this->renderInformation->getLeft() + (($month->number()-1) * $this->renderInformation->getColumnWidth()),
+                    $startHeight + (($day->number()-1) * $this->renderInformation->getRowHeight()),
+                    $this->renderInformation->getColumnWidth()-1,
+                    $this->renderInformation->getRowHeight(),
+                    $text
+                );
             }
         }
     }
@@ -138,7 +135,8 @@ class LandscapeYear implements RendererInterface
     {
         $colorData = [
             'fill' => false,
-            'color' => [0,0,0]
+            'color' => [0,0,0],
+            'hexColor' => ''
         ];
 
         $weekday = $day->weekDay();
@@ -146,6 +144,7 @@ class LandscapeYear implements RendererInterface
             $colorData['fill'] = 1;
             if (isset($this->fillColorWeekday[$weekday->number()])) {
                 $colorData['color'] = RenderUtils::hex2rgb($this->fillColorWeekday[$weekday->number()]);
+                $colorData['hexColor'] = $this->fillColorWeekday[$weekday->number()];
             }
         }
 
@@ -161,6 +160,8 @@ class LandscapeYear implements RendererInterface
     {
         $canvasSizeX = $this->pdfRenderer->getPdfWidth();
         $canvasSizeY = $this->pdfRenderer->getPdfHeight();
+
+        /** @var LandscapeYearInformation $landscapeRenderInformation */
         $landscapeRenderInformation = (new LandscapeYearInformation())
             ->setCalendarPeriod($this->renderRequest->getPeriod())
             ->initRenderInformation();

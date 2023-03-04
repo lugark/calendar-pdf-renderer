@@ -38,6 +38,7 @@ class SchoolHolidayRenderer extends AbstractEventTypeRenderer
         $startDay = $event->getStart()->day();
         $endDay = $event->getEnd()->day();
         $monthEnd = $endDay->month()->number();
+        $pdfGenerator = $this->pdfRenderer->getPdfGenerator();
 
         for ($i=$startDay->month()->number(); $i<=$monthEnd; $i++) {
             $x = $calendarRenderInformation->getLeft() +
@@ -57,8 +58,8 @@ class SchoolHolidayRenderer extends AbstractEventTypeRenderer
             $height = $days * $calendarRenderInformation->getRowHeight();
             $drawColor = RenderUtils::hex2rgb(self::COLORS_SCHOOL_HOLIDAY[2]);
 
-            $this->mpdf->SetFillColor($drawColor[0], $drawColor[1], $drawColor[2]);
-            $this->mpdf->Rect(
+            $pdfGenerator->SetFillColor($drawColor[0], $drawColor[1], $drawColor[2]);
+            $pdfGenerator->Rect(
                 $x,
                 $y,
                 6,

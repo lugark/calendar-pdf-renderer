@@ -24,9 +24,10 @@ class PublicHolidayRenderer extends AbstractEventTypeRenderer
             );
         }
 
-        $this->mpdf->SetFontSize(self::FONT_SIZE_HOLIDAY);
-        $this->mpdf->SetFont('', 'B');
-        $this->mpdf->SetTextColor(199, 50, 50);
+        $pdfGenerator = $this->pdfRenderer->getPdfGenerator();
+        $pdfGenerator->SetFontSize(self::FONT_SIZE_HOLIDAY);
+        $pdfGenerator->SetFont('', 'B');
+        $pdfGenerator->SetTextColor(199, 50, 50);
 
         $month = $event->getStart()->month()->number();
         $day = $event->getStart()->day()->number();
@@ -36,8 +37,8 @@ class PublicHolidayRenderer extends AbstractEventTypeRenderer
             (($day-1) * $calendarRenderInformation->getRowHeight()) +
             $calendarRenderInformation->getHeaderHeight()  + 1.7;
 
-        $this->mpdf->SetXY($x, $y);
-        $this->mpdf->WriteText($x,$y, $event->getText());
+        $pdfGenerator->SetXY($x, $y);
+        $pdfGenerator->WriteText($x,$y, $event->getText());
     }
 
     public function getRenderType(): string

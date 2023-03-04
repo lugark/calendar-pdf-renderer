@@ -2,11 +2,13 @@
     "name": "lugark/calendar-pdf-renderer",
     "type": "library",
     "description": "to generate pdf calendars with custom events & holidays",
-    "license": "MIT",    
+    "license": "MIT",
     "require": {
+        "ext-intl": "*",
         "php": "^8.1",
         "mpdf/mpdf": "^8.1",
-        "aeon-php/calendar": "^1.0"
+        "aeon-php/calendar": "^1.0",
+        "setasign/fpdf": "^1.8"
     },
     "require-dev": {
         "symfony/http-kernel": "^5.4",
