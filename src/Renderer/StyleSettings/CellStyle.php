@@ -18,65 +18,41 @@ class CellStyle
     ) {        
     }
 
-    /**
-     * Get the value of textColorHex
-     */ 
     public function getTextColorHex()
     {
             return $this->textColorHex;
     }
 
-    /**
-     * Get the value of drawBorder
-     */ 
     public function getDrawBorder()
     {
         return $this->drawBorder;
     }
 
-    /**
-     * Get the value of borderColorHex
-     */ 
     public function getBorderColorHex()
     {
         return $this->borderColorHex;
     }
 
-    /**
-     * Get the value of align
-     */ 
     public function getAlign()
     {
         return $this->align;
     }
 
-    /**
-     * Get the value of ln
-     */ 
     public function getLn()
     {
         return $this->ln;
     }
 
-    /**
-     * Get the value of fill
-     */ 
     public function getFill()
     {
         return $this->fill;
     }
 
-    /**
-     * Get the value of fillColor
-     */ 
     public function getFillColor()
     {
         return $this->fillColor;
     }
 
-    /**
-     * Get the value of fontStyle
-     */ 
     public function getFontStyle()
     {
         return $this->fontStyle;

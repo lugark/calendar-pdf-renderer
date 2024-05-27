@@ -15,20 +15,12 @@ class FontStyle
     {
         return $this->fontFamily;
     }
-
     
-
-    /**
-     * Get the value of fontStyle
-     */ 
     public function getFontStyle()
     {
             return $this->fontStyle;
     }
 
-    /**
-     * Get the value of fontSize
-     */ 
     public function getFontSize()
     {
             return $this->fontSize;
