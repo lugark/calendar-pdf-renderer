@@ -34,6 +34,7 @@
     "scripts": {
         "phpunit": "vendor/bin/simple-phpunit -c phpunit.xml.dist",
         "phpstan": "vendor/bin/phpstan analyze -c phpstan.neon --memory-limit 2G",
+        "phpunit-coverage": "vendor/bin/simple-phpunit  --coverage-clover reports/coverage.xml --log-junit reports/phpunit_report.xml",
         "test": [
             "@phpstan",
             "@phpunit"

@@ -2,8 +2,10 @@
 
 namespace Calendar\Pdf\Renderer\Renderer;
 
+use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererException;
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\EventTypeRendererInterface;
-use Mpdf\Mpdf;
+use ReflectionClass;
+use ReflectionException;
 
 class CalendarRenderer
 {
@@ -16,6 +18,10 @@ class CalendarRenderer
         $this->pdfRenderer = $pdfRenderer;
     }
 
+    /**
+     * @throws RendererException|ReflectionException
+     * @throws EventTypeRendererException
+     */
     public function renderCalendar(RenderRequest $renderRequest): ?string
     {
         $this->renderer = self::getRendererByRequest(
@@ -39,12 +45,16 @@ class CalendarRenderer
         return new $renderClassType($pdfRenderer);
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws RendererException
+     */
     public static function initEventRenderer(RendererInterface $renderer, PdfRenderer $pdfRenderer): EventRenderer
     {
         $eventRenderer = new EventRenderer();
         $eventRenderer->setPdfGenerator($pdfRenderer);
         foreach ($renderer->getSupportedEventRenderer() as $supportedRenderer) {
-            $reflection = new \ReflectionClass($supportedRenderer);
+            $reflection = new ReflectionClass($supportedRenderer);
             if ($reflection->implementsInterface(EventTypeRendererInterface::class)) {
                 $eventRenderer->registerRenderer(new $supportedRenderer());
             } else {
@@ -54,6 +64,9 @@ class CalendarRenderer
         return $eventRenderer;
     }
 
+    /**
+     * @throws EventTypeRendererException
+     */
     protected function renderEvents(RenderRequest $renderRequest):void
     {
         $events = $renderRequest->getEvents();

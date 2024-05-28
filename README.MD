@@ -1,10 +1,15 @@
 # CalendarGenerator
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.4-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.2-8892BF.svg)](https://php.net/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lugark_CalendarGenerator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=lugark_CalendarGenerator)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=lugark_CalendarGenerator&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=lugark_CalendarGenerator)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=lugark_CalendarGenerator&metric=bugs)](https://sonarcloud.io/summary/new_code?id=lugark_CalendarGenerator)
+![CI](https://github.com/lugark/calendar-pdf-renderer/workflows/CI/badge.svg)
+
 This library aims to have a flexible way to render a calendar
 
 ## Dependencies
-- PHP 7.4 or higher
-- Symfony 5.4
+- PHP 8.1 or higher
+- Symfony 6.4
 - [aeon-php/calendar](https://github.com/aeon-php/calendar) to iterate/calculate calendar
 - [mpdf/mpdf](https://github.com/mpdf/mpdf) to generate the PDF
 

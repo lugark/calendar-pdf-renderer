@@ -40,7 +40,7 @@ jobs:
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
-      run: composer phpunit
+      run: composer phpunit-coverage
     - uses: actions/upload-artifact@v4
       name: Upload reports-artifacts 
       with:

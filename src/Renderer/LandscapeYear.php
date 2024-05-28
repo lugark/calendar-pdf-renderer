@@ -7,8 +7,8 @@ use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\PublicHoliday
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\SchoolHolidayRenderer;
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
 use Calendar\Pdf\Renderer\Service\RenderUtils;
+use Mpdf\MpdfException;
 use Mpdf\Output\Destination;
-use Calendar\Pdf\Renderer\Renderer\PdfSettings;
 use Calendar\Pdf\Renderer\Renderer\StyleSettings\CellStyle;
 use Calendar\Pdf\Renderer\Renderer\StyleSettings\FontStyle;
 
@@ -29,7 +29,7 @@ class LandscapeYear implements RendererInterface
     const HEADER_HEIGHT = 6;
     const CALENDAR_START_XY = 20;
 
-    private $fillColorWeekday = [
+    private array $fillColorWeekday = [
         6 => self::COLOR_FILL_SA,
         7 => self::COLOR_FILL_SO
     ];
@@ -45,7 +45,10 @@ class LandscapeYear implements RendererInterface
         $this->pdfRenderer = $pdfRenderer;
     }
 
-    protected function initRenderer()
+    /**
+     * @throws MpdfException
+     */
+    protected function initRenderer(): void
     {
         $this->pdfRenderer->initPdf(
             new PdfSettings(
@@ -58,6 +61,10 @@ class LandscapeYear implements RendererInterface
         );
     }
 
+    /**
+     * @throws MpdfException
+     * @throws RendererException
+     */
     public function renderCalendar(RenderRequest $renderRequest): RendererInterface
     {
         $this->initRenderer();
@@ -66,7 +73,7 @@ class LandscapeYear implements RendererInterface
         $this->renderHeader();
         $this->renderData();
 
-        $this->pdfRenderer->drawRectangle(
+        $this->pdfRenderer->drawColoredRectangle(
             self::COLOR_BORDER_TABLE,
             $this->renderInformation->getLeft()-2,
             $this->renderInformation->getTop(),
@@ -77,7 +84,10 @@ class LandscapeYear implements RendererInterface
         return $this;
     }
 
-    private function renderHeader()
+    /**
+     * @throws MpdfException
+     */
+    private function renderHeader(): void
     {
         $cellStyle = new CellStyle(
             new FontStyle('', 'B', self::FONT_SIZE_HEADER),
@@ -100,6 +110,9 @@ class LandscapeYear implements RendererInterface
         }
     }
 
+    /**
+     * @throws MpdfException
+     */
     public function renderData(): void
     {
         $cellStyle = new CellStyle(
@@ -156,6 +169,9 @@ class LandscapeYear implements RendererInterface
         return new LandscapeYearInformation();
     }
 
+    /**
+     * @throws RendererException
+     */
     protected function calculateDimensions(): LandscapeYearInformation
     {
         $canvasSizeX = $this->pdfRenderer->getPdfWidth();
@@ -192,6 +208,10 @@ class LandscapeYear implements RendererInterface
         ];
     }
 
+    /**
+     * @throws MpdfException
+     * @throws RendererException
+     */
     public function getOutput(): ?string
     {
         $pdfGenerator = $this->pdfRenderer->getPdfGenerator();

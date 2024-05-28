@@ -3,10 +3,10 @@
 namespace Calendar\Pdf\Renderer\Renderer;
 
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\RenderInformationInterface;
-use Calendar\Pdf\Renderer\Renderer\PdfSettings;
 use Calendar\Pdf\Renderer\Renderer\StyleSettings\CellStyle;
 use Calendar\Pdf\Renderer\Renderer\StyleSettings\FontStyle;
 use Mpdf\Mpdf;
+use Mpdf\MpdfException;
 use Psr\Log\AbstractLogger;
 use Calendar\Pdf\Renderer\Service\RenderUtils;
 
@@ -14,6 +14,9 @@ class PdfRenderer
 {
     protected ?Mpdf $mpdf=null;
 
+    /**
+     * @throws MpdfException
+     */
     private function initMpdf(
         array $options=[],
         string $displaymode='fullpage',
@@ -24,7 +27,7 @@ class PdfRenderer
         $this->mpdf = new Mpdf($options);
 
         $this->mpdf->setLogger(new class extends AbstractLogger {
-            public function log($level, $message, $context=[])
+            public function log($level, $message, $context=[]): void
             {
                 echo $level . ': ' . $message . PHP_EOL;
             }
@@ -38,7 +41,10 @@ class PdfRenderer
         }
     }
 
-    public function initPdf(PdfSettings $pdfSettings)
+    /**
+     * @throws MpdfException
+     */
+    public function initPdf(PdfSettings $pdfSettings): void
     {
         $this->initMpdf([
             'format' => $pdfSettings->getPaperFormat(),
@@ -49,6 +55,9 @@ class PdfRenderer
         ]);
     }
 
+    /**
+     * @throws RendererException
+     */
     protected function checkForValidMpdfRenderer(): void
     {
         if (empty($this->mpdf)) {
@@ -56,6 +65,9 @@ class PdfRenderer
         }
     }
 
+    /**
+     * @throws RendererException
+     */
     public function setDimensions(RenderInformationInterface $renderInformation): void
     {
         $this->checkForValidMpdfRenderer();
@@ -64,42 +76,54 @@ class PdfRenderer
             ->setTop($this->mpdf->tMargin);
     }
 
+    /**
+     * @throws RendererException
+     */
     public function getPdfWidth(): int
     {
         $this->checkForValidMpdfRenderer();
         return intval(round($this->mpdf->w));
     }
 
+    /**
+     * @throws RendererException
+     */
     public function getPdfHeight(): int
     {
         $this->checkForValidMpdfRenderer();
         return intval(round($this->mpdf->h));
     }
 
+    /**
+     * @throws RendererException
+     */
     public function getPdfGenerator(): Mpdf
     {
         $this->checkForValidMpdfRenderer();
         return $this->mpdf;
     }
 
-    public function drawRectangle(
+    public function drawColoredRectangle(
         string $drawColorHex,
-        int $x,
-        int $y,
-        int $width,
-        int $height
+        float $x,
+        float $y,
+        float $width,
+        float $height
     ): void {
         $drawColorRGB = RenderUtils::hex2rgb($drawColorHex);
         $this->mpdf->SetDrawColor($drawColorRGB[0], $drawColorRGB[1], $drawColorRGB[2]);
         $this->mpdf->Rect($x, $y, $width, $height);
     }
 
+    /**
+     * @throws MpdfException
+     */
     public function writeTextInCell(
         CellStyle $cellStyle,
         float $width,
         float $height,
         string $text
-    ) {
+    ):void {
         $this->setFont($cellStyle->getFontStyle());
         $this->setBorderColor($cellStyle->getBorderColorHex());
         $this->setTextColor($cellStyle->getTextColorHex());
@@ -116,6 +140,9 @@ class PdfRenderer
         );
     }
 
+    /**
+     * @throws MpdfException
+     */
     public function writeTextInCellAtXY(
         CellStyle $cellStyle,
         float $x,
@@ -123,7 +150,7 @@ class PdfRenderer
         float $width,
         float $height,
         string $text
-    ) {
+    ):void {
         $this->setFont($cellStyle->getFontStyle());
         $this->setBorderColor($cellStyle->getBorderColorHex());
         $this->setTextColor($cellStyle->getTextColorHex());
@@ -141,7 +168,10 @@ class PdfRenderer
         );
     }
 
-    private function setFont(FontStyle $fontStyle)
+    /**
+     * @throws MpdfException
+     */
+    private function setFont(FontStyle $fontStyle): void
     {
         $this->mpdf->SetFont(
             $fontStyle->getFontFamily(),
@@ -150,7 +180,7 @@ class PdfRenderer
         $this->mpdf->SetFontSize($fontStyle->getFontSize());
     }
 
-    private function setBorderColor(?string $borderColorHex)
+    private function setBorderColor(?string $borderColorHex): void
     {
         if (!empty($borderColorHex)) {
             $borderColor = RenderUtils::hex2rgb($borderColorHex);
@@ -158,7 +188,7 @@ class PdfRenderer
         }
     }
 
-    private function setTextColor(?string $textColorHex)
+    private function setTextColor(?string $textColorHex): void
     {
         if (!empty($textColorHex)) {            
             $textColor = RenderUtils::hex2rgb($textColorHex);
@@ -166,7 +196,7 @@ class PdfRenderer
         }
     }
 
-    private function setFillColor(?string $fillColorHex)
+    private function setFillColor(?string $fillColorHex): void
     {
         if (!empty($fillColorHex)) {            
             $fillColor = RenderUtils::hex2rgb($fillColorHex);

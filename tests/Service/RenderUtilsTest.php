@@ -2,6 +2,7 @@
 
 namespace Calendar\Pdf\Renderer\Tests\Service;
 
+use Aeon\Calendar\Exception\InvalidArgumentException;
 use Aeon\Calendar\Gregorian\Day;
 use Aeon\Calendar\Gregorian\Month;
 use Calendar\Pdf\Renderer\Service\RenderUtils;
@@ -10,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 class RenderUtilsTest extends TestCase
 {
 
-    public function hex2rgbProvider()
+    /**
+     * @return array<mixed>
+     */
+    public function hex2rgbProvider(): array
     {
         return [
             [
@@ -39,7 +43,11 @@ class RenderUtilsTest extends TestCase
         $this->assertEquals($rgbArray, RenderUtils::hex2rgb($hex));
     }
 
-    public function monthLocalizedData()
+    /**
+     * @throws InvalidArgumentException
+     * @return array<mixed>
+     */
+    public function monthLocalizedData(): array
     {
         return [
             [
@@ -74,7 +82,11 @@ class RenderUtilsTest extends TestCase
 
     }
 
-    public function dowLocalizedData()
+    /**
+     * @throws InvalidArgumentException
+     * @return array<mixed>
+     */
+    public function dowLocalizedData(): array
     {
         return [
             [

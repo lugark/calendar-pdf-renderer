@@ -2,12 +2,12 @@
 
 namespace Calendar\Pdf\Renderer\Renderer\StyleSettings;
 
-class FontStyle
+readonly class FontStyle
 {
     public function __construct(
         private ?string $fontFamily = '',
         private ?string $fontStyle = '',
-        private ?int $fontSize = 12       
+        private ?int    $fontSize = 12
     ) {        
     }
 
@@ -16,12 +16,12 @@ class FontStyle
         return $this->fontFamily;
     }
     
-    public function getFontStyle()
+    public function getFontStyle(): ?string
     {
             return $this->fontStyle;
     }
 
-    public function getFontSize()
+    public function getFontSize(): ?int
     {
             return $this->fontSize;
     }
