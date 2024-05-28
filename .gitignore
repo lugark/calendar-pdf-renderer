@@ -8,3 +8,5 @@ build/
 composer.lock
 
 .phpunit.cache/
+
+reports/

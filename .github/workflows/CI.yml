@@ -10,7 +10,7 @@ on:
 
 jobs:
   tests:
-    uses: lugark/CalendarGenerator/.github/workflows/symfony.yml@master
+    uses: lugark/calendar-pdf-renderer/.github/workflows/symfony.yml
 
   codecov:
     needs: tests
