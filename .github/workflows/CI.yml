@@ -10,7 +10,7 @@ on:
 
 jobs:
   tests:
-    uses: lugark/calendar-pdf-renderer/.github/workflows/symfony.yml
+    uses: lugark/calendar-pdf-renderer/.github/workflows/symfony.yml@feature/replace_aeon_with_carbon 
 
   codecov:
     needs: tests
