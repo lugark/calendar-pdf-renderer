@@ -92,7 +92,7 @@ class LandscapeYear implements RendererInterface
         $cellStyle = new CellStyle(
             new FontStyle('', 'B', self::FONT_SIZE_HEADER),
             self::COLOR_TEXT_HEADER, 
-            0, 
+            null,
             self::COLOR_BORDER_HEADER, 
             'C',
             0,
