@@ -7,6 +7,7 @@ use Aeon\Calendar\Gregorian\Day;
 use Aeon\Calendar\Gregorian\Month;
 use Calendar\Pdf\Renderer\Service\RenderUtils;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RenderUtilsTest extends TestCase
 {
@@ -14,7 +15,7 @@ class RenderUtilsTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function hex2rgbProvider(): array
+    public static function hex2rgbProvider(): array
     {
         return [
             [
@@ -37,7 +38,7 @@ class RenderUtilsTest extends TestCase
         ];
     }
 
-    /** @dataProvider hex2rgbProvider */
+    #[DataProvider('hex2rgbProvider')]
     public function testHex2rgb($hex, $rgbArray)
     {
         $this->assertEquals($rgbArray, RenderUtils::hex2rgb($hex));
@@ -47,7 +48,7 @@ class RenderUtilsTest extends TestCase
      * @throws InvalidArgumentException
      * @return array<mixed>
      */
-    public function monthLocalizedData(): array
+    public static function monthLocalizedData(): array
     {
         return [
             [
@@ -71,7 +72,7 @@ class RenderUtilsTest extends TestCase
         ];
     }
 
-    /** @dataProvider monthLocalizedData */
+    #[DataProvider('monthLocalizedData')]
     public function testMonthLocalized(Month $month, $locale, $expectedString, $expectedStringWithYear)
     {
         locale_set_default($locale);
@@ -86,7 +87,7 @@ class RenderUtilsTest extends TestCase
      * @throws InvalidArgumentException
      * @return array<mixed>
      */
-    public function dowLocalizedData(): array
+    public static function dowLocalizedData(): array
     {
         return [
             [
@@ -102,7 +103,7 @@ class RenderUtilsTest extends TestCase
         ];
     }
 
-    /** @dataProvider dowLocalizedData */
+    #[DataProvider('dowLocalizedData')]
     public function testDayOfWeekLocalized(Day $day, $locale, $expectedString)
     {
         locale_set_default($locale);

@@ -6,6 +6,7 @@ use Aeon\Calendar\Gregorian\DateTime;
 use Aeon\Calendar\Gregorian\Interval;
 use Aeon\Calendar\Gregorian\TimePeriod;
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class LandscapeYearInformationTest extends TestCase
@@ -18,7 +19,7 @@ class LandscapeYearInformationTest extends TestCase
         $this->sut = new LandscapeYearInformation();
     }
 
-    public function provideRenderInformationData()
+    public static function provideRenderInformationData()
     {
         return [
             [
@@ -40,7 +41,7 @@ class LandscapeYearInformationTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideRenderInformationData */
+    #[DataProvider('provideRenderInformationData')]
     public function testInitRenderInformation($period, $expectedMonths)
     {
         /** @var TimePeriod $period */

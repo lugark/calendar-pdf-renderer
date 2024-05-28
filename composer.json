@@ -14,8 +14,8 @@
         "symfony/http-kernel": "^6.4",
         "symfony/dependency-injection": "^6.4",
         "phpstan/phpstan": "^1.11",
-        "symfony/phpunit-bridge": "^6.4",
-        "phpstan/phpstan-symfony": "^1.4"
+        "phpstan/phpstan-symfony": "^1.4",
+        "phpunit/phpunit": "^11.1"
     },
     "suggest": {
         "symfony/dependency-injection": "",
@@ -32,9 +32,9 @@
         }
     },
     "scripts": {
-        "phpunit": "vendor/bin/simple-phpunit -c phpunit.xml.dist",
+        "phpunit": "vendor/bin/phpunit -c phpunit.xml.dist",
         "phpstan": "vendor/bin/phpstan analyze -c phpstan.neon --memory-limit 2G",
-        "phpunit-coverage": "vendor/bin/simple-phpunit  --coverage-clover reports/coverage.xml --log-junit reports/phpunit_report.xml",
+        "phpunit-coverage": "vendor/bin/phpunit  --coverage-clover reports/coverage.xml --log-junit reports/phpunit_report.xml",
         "test": [
             "@phpstan",
             "@phpunit"

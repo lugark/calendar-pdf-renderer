@@ -7,6 +7,7 @@ use Calendar\Pdf\Renderer\Event\Event;
 use Calendar\Pdf\Renderer\Event\EventException;
 use Calendar\Pdf\Renderer\Event\Events;
 use Calendar\Pdf\Renderer\Event\Types;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class EventsTest extends TestCase
@@ -14,7 +15,7 @@ class EventsTest extends TestCase
     /** @var Events */
     private $sut;
 
-    public function getEventsTestData()
+    public static function getEventsTestData()
     {
         $events = array();
         $start = new \DateTime('2017-01-01 10:00:00');
@@ -37,7 +38,7 @@ class EventsTest extends TestCase
         ];
     }
 
-    /** @dataProvider getEventsTestData */
+    #[DataProvider('getEventsTestData')]
     public function testEvents($events, $calendarStart, $calenderEnd, $count)
     {
         $this->sut = new Events($events);

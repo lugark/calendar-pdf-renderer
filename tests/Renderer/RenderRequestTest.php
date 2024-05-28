@@ -7,6 +7,7 @@ use Aeon\Calendar\Gregorian\TimePeriod;
 use Calendar\Pdf\Renderer\Event\Events;
 use Calendar\Pdf\Renderer\Renderer\LandscapeYear;
 use Calendar\Pdf\Renderer\Renderer\RenderRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class RenderRequestTest extends TestCase
@@ -18,7 +19,7 @@ class RenderRequestTest extends TestCase
         parent::setUp();
     }
 
-    public function renderRequestProvider()
+    public static function renderRequestProvider()
     {
         $start = DateTime::fromString('01-01-1976');
         return [
@@ -37,7 +38,7 @@ class RenderRequestTest extends TestCase
         ];
     }
 
-    /** @dataProvider renderRequestProvider */
+    #[DataProvider('renderRequestProvider')]
     public function testRenderRequest($requestType, $startDate, $endDate, $expectedPeriod)
     {
         $this->sut = new RenderRequest($requestType, $startDate, $endDate);

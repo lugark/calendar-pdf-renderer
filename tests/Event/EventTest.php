@@ -5,6 +5,7 @@ namespace Calendar\Pdf\Renderer\Tests\Event;
 use Aeon\Calendar\Gregorian\DateTime;
 use Calendar\Pdf\Renderer\Event\Event;
 use Calendar\Pdf\Renderer\Event\Types;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class EventTest extends TestCase
@@ -29,7 +30,7 @@ class EventTest extends TestCase
         $this->assertEquals(DateTime::fromDateTime($end), $eventTest->getEnd());
     }
 
-    public function getEventData()
+    public static function getEventData()
     {
         return [
             'Within' => [
@@ -70,9 +71,8 @@ class EventTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getEventData
-     */
+
+    #[DataProvider('getEventData')]
     public function testInRange($start, $end, $testStart, $testEnd, bool $isInRange)
     {
         $eventTest = new Event(Types::EVENT_TYPE_CUSTOM);
