@@ -5,17 +5,17 @@
     "license": "MIT",
     "require": {
         "ext-intl": "*",
-        "php": "^8.1",
+        "php": "^8.2",
         "mpdf/mpdf": "^8.1",
         "aeon-php/calendar": "^1.0",
         "setasign/fpdf": "^1.8"
     },
     "require-dev": {
-        "symfony/http-kernel": "^5.4 || ^6.0",
-        "symfony/dependency-injection": "^5.4",
-        "phpstan/phpstan": "^1.8",
-        "symfony/phpunit-bridge": "^6.1",
-        "phpstan/phpstan-symfony": "^1.2"
+        "symfony/http-kernel": "^6.4",
+        "symfony/dependency-injection": "^6.4",
+        "phpstan/phpstan": "^1.11",
+        "symfony/phpunit-bridge": "^6.4",
+        "phpstan/phpstan-symfony": "^1.4"
     },
     "suggest": {
         "symfony/dependency-injection": "",
