@@ -42,7 +42,7 @@ class AbstractRenderInformationTest extends TestCase
         $this->markTestSkipped('Abastract class mock deprecated in PHPUnit 12');
         $this->sut->setCalendarPeriod($period);
         $expectedStart->time();
-        $this->assertEquals($period, $this->sut->getTimePeriod());
+        $this->assertEquals($period, $this->sut->getCalendarPeriod());
         $this->assertEquals($expectedStart->toISO8601(), $this->sut->getCalendarStartsAt()->toISO8601());
         $this->assertEquals($expectedEnd->toISO8601(), $this->sut->getCalendarEndsAt()->toISO8601());
         $this->assertEquals($expectedCrossYear, $this->sut->doesCrossYear());

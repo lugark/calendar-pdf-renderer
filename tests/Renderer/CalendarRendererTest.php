@@ -16,7 +16,6 @@ use Closure;
 use Mpdf\Mpdf;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use setasign\Fpdi\PdfReader\PdfReader;
 
 class StubCalRenderer extends CalendarRenderer
 {
@@ -128,9 +127,7 @@ class CalendarRendererTest extends TestCase
 
     public static function getEventsRenderEvents()
     {
-        $event = new Event(Types::EVENT_TYPE_PUBLIC_HOLIDAY);
-        $event->setEventPeriod(new \DateTime());
-        $event->setText('TestEvent');
+        $event = Event::fromArray(['date' => '2017-01-01 10:00:00', 'name' => 'Test'], Types::EVENT_TYPE_PUBLIC_HOLIDAY);
         return [
             'zeroEvents' => [null, 0],
             'emptyEvents' => [[], 0],

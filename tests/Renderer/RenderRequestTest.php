@@ -2,11 +2,10 @@
 
 namespace Calendar\Pdf\Renderer\Tests\Renderer;
 
-use Aeon\Calendar\Gregorian\DateTime;
-use Aeon\Calendar\Gregorian\TimePeriod;
 use Calendar\Pdf\Renderer\Event\Events;
 use Calendar\Pdf\Renderer\Renderer\LandscapeYear;
 use Calendar\Pdf\Renderer\Renderer\RenderRequest;
+use Carbon\CarbonPeriod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -21,19 +20,18 @@ class RenderRequestTest extends TestCase
 
     public static function renderRequestProvider()
     {
-        $start = DateTime::fromString('01-01-1976');
         return [
             [
                 LandscapeYear::class,
                 new \DateTime('01-01-1976'),
                 null,
-                new TimePeriod(DateTime::fromString('01-01-1976'), DateTime::fromString('01-01-1977'))
+                CarbonPeriod::create('01-01-1976', '01-01-1977')
             ],
             [
                 LandscapeYear::class,
                 new \DateTime('01-01-1976'),
                 new \DateTime('01-02-1976'),
-                $start->until(DateTime::fromString('01-02-1976'))
+                CarbonPeriod::create('01-01-1976', '01-02-1976')
             ],
         ];
     }

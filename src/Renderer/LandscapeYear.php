@@ -2,11 +2,13 @@
 
 namespace Calendar\Pdf\Renderer\Renderer;
 
-use Aeon\Calendar\Gregorian\Day;
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\PublicHolidayRenderer;
 use Calendar\Pdf\Renderer\Renderer\EventTypeRenderer\LandscapeYear\SchoolHolidayRenderer;
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
 use Calendar\Pdf\Renderer\Service\RenderUtils;
+use Carbon\CarbonInterface;
+use Carbon\CarbonPeriod;
+use Carbon\Unit;
 use Mpdf\MpdfException;
 use Mpdf\Output\Destination;
 use Calendar\Pdf\Renderer\Renderer\StyleSettings\CellStyle;
@@ -100,12 +102,19 @@ class LandscapeYear implements RendererInterface
 
         $includeYear = !$this->renderInformation->doesCrossYear();
 
-        foreach ($this->renderInformation->getMonthsToRender() as $month) {
+        $headerPeriod = $this->getRenderInformation()->getCalendarPeriod();
+        $headerPeriod->setDateInterval(1, Unit::Month);
+        /** @var CarbonInterface $date */
+        foreach ($headerPeriod as $date) {
+            $date->locale('de_DE');
+            $monthText = $date->isoFormat(RenderUtils::ICU_STAND_ALONE_MONTH_FULL);
+            $monthText = !$this->renderInformation->doesCrossYear() ?: $monthText.' `'.$date->isoFormat('y');
+
             $this->pdfRenderer->writeTextInCell(
                 $cellStyle,
                 $this->renderInformation->getColumnWidth() ,
                 self::HEADER_HEIGHT ,
-                RenderUtils::getMonthLocalized($month, $includeYear),
+                $monthText
             );
         }
     }
@@ -125,17 +134,22 @@ class LandscapeYear implements RendererInterface
         );
         $startHeight = $this->renderInformation->getTop() + $this->renderInformation->getHeaderHeight();
 
-        foreach ($this->renderInformation->getMonthsToRender() as $month) {
-            /** @var Day $day */
-            foreach ($month->days()->all() as $day) {
-                $text = $day->number() . ' ' . RenderUtils::getDayOfWeekLocalized($day);
+        $dataPeriod = $this->getRenderInformation()->getCalendarPeriod();
+        $dataPeriod->setDateInterval(1, Unit::Month);
+        /** @var CarbonInterface $month */
+        foreach ($dataPeriod as $month) {
+            $monthPeriod = CarbonPeriod::create($month->firstOfMonth(), $month->lastOfMonth());
+            foreach ($monthPeriod as $day) {
+                $day->locale('de_DE');
+                $text = $day->day . ' ' . $day->isoFormat(RenderUtils::ICU_STAND_ALONE_DOW_SHORT);
+
                 $colorData = $this->getDayColorData($day);
                 $cellStyle->setFill($colorData['fill']); 
                 $cellStyle->setFillColor($colorData['hexColor']);
                 $this->pdfRenderer->writeTextInCellAtXY(
                     $cellStyle,
-                    $this->renderInformation->getLeft() + (($month->number()-1) * $this->renderInformation->getColumnWidth()),
-                    $startHeight + (($day->number()-1) * $this->renderInformation->getRowHeight()),
+                    $this->renderInformation->getLeft() + (($month->month - 1) * $this->renderInformation->getColumnWidth()),
+                    $startHeight + (($day->day - 1) * $this->renderInformation->getRowHeight()),
                     $this->renderInformation->getColumnWidth()-1,
                     $this->renderInformation->getRowHeight(),
                     $text
@@ -144,7 +158,7 @@ class LandscapeYear implements RendererInterface
         }
     }
 
-    private function getDayColorData(Day $day): array
+    private function getDayColorData(CarbonInterface $day): array
     {
         $colorData = [
             'fill' => false,
@@ -152,12 +166,11 @@ class LandscapeYear implements RendererInterface
             'hexColor' => ''
         ];
 
-        $weekday = $day->weekDay();
-        if ($weekday->isWeekend()) {
+        if ($day->isWeekend()) {
             $colorData['fill'] = 1;
-            if (isset($this->fillColorWeekday[$weekday->number()])) {
-                $colorData['color'] = RenderUtils::hex2rgb($this->fillColorWeekday[$weekday->number()]);
-                $colorData['hexColor'] = $this->fillColorWeekday[$weekday->number()];
+            if (isset($this->fillColorWeekday[$day->dayOfWeek])) {
+                $colorData['color'] = RenderUtils::hex2rgb($this->fillColorWeekday[$day->dayOfWeek]);
+                $colorData['hexColor'] = $this->fillColorWeekday[$day->dayOfWeek];
             }
         }
 

@@ -2,20 +2,20 @@
 
 namespace Calendar\Pdf\Renderer\Event;
 
-use Aeon\Calendar\Gregorian\DateTime;
-use Aeon\Calendar\Gregorian\TimePeriod;
+use Carbon\CarbonInterface;
+use Carbon\CarbonPeriod;
+use DateTime;
 
 class Event
 {
-    private $text;
+    private string $text;
 
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var array */
-    private $additionalInformation;
+    /** @var array<mixed> */
+    private array $additionalInformation;
 
-    private TimePeriod $period;
+    private CarbonPeriod $eventPriod;
 
     public function __construct($type=Types::EVENT_TYPE_CUSTOM)
     {
@@ -27,7 +27,7 @@ class Event
         return $this->text;
     }
 
-    public function setText($text): Event
+    public function setText(string $text): Event
     {
         $this->text = $text;
         return $this;
@@ -44,13 +44,17 @@ class Event
         return $this;
     }
 
-    public function isInRange(DateTime $start, DateTime $end): bool
+    public function isInRange(CarbonInterface $start, ?CarbonInterface $end): bool
     {
-        if (empty($this->period)) {
+        if (empty($this->eventPriod)) {
             return false;
         }
 
-        return ($this->period->start()->isAfterOrEqual($start) && $this->period->end()->isBeforeOrEqual($end));
+        if (!empty($end)) {
+            return $this->eventPriod->overlaps(CarbonPeriod::create($start, $end));
+        } else {
+            return $this->eventPriod->contains($start);
+        }
     }
 
     public function getType()
@@ -58,22 +62,50 @@ class Event
         return $this->type;
     }
 
-    public function setEventPeriod(\DateTime $start, \DateTime $end=null)
+    public function setEventPeriod(string $start, string $end=null): void
     {
         if (empty($end)) {
-            $end = clone $start;
+            $end = $start;
         }
 
-        $this->period = new TimePeriod(DateTime::fromDateTime($start), DateTime::fromDateTime($end));
+        $this->eventPriod = CarbonPeriod::create($start, $end);
     }
 
-    public function getStart(): DateTime
+    public function getStart(): CarbonInterface
     {
-        return $this->period->start();
+        return $this->eventPriod->getStartDate();
     }
 
-    public function getEnd(): DateTime
+    public function getEnd(): CarbonInterface
     {
-        return $this->period->end();
+        return $this->eventPriod->getEndDate();
+    }
+
+    public function getEndMonthAsNumber(): int
+    {
+        return $this->eventPriod->getEndDate()->month;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromArray(array $data, string $eventType): Event
+    {
+        if (! array_key_exists('name', $data)) {
+            throw new EventException('Data for event does not have a name!');
+        }
+
+        $event = new Event($eventType);
+        $event->setText($data['name']);
+
+        $startDate = isset($data['start']) ? $data['start'] : $data['date'];
+        $endDate = $data['end'] ?? null;
+
+        if ($startDate === null) {
+            throw new EventException('No start date found for Event!');
+        }
+        
+        $event->setEventPeriod($startDate, $endDate);
+        return $event;
     }
 }

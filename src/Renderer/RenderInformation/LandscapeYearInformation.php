@@ -2,15 +2,12 @@
 
 namespace Calendar\Pdf\Renderer\Renderer\RenderInformation;
 
-use Aeon\Calendar\Gregorian\Interval;
-use Aeon\Calendar\Gregorian\Month;
+use Carbon\CarbonPeriod;
+use Carbon\Unit;
 
 class LandscapeYearInformation extends AbstractRenderInformation
 {
     protected int $numberOfMonthsToRender=12;
-
-    /** @var Month[] */
-    protected array $monthsToRender;
 
     private float $headerHeight;
 
@@ -20,7 +17,7 @@ class LandscapeYearInformation extends AbstractRenderInformation
 
     private int $maxRowsToRender=31;
 
-    public function numberOfMonthsToRender():int
+    public function numberOfMonthsToRender(): int
     {
         return $this->numberOfMonthsToRender;
     }
@@ -60,10 +57,11 @@ class LandscapeYearInformation extends AbstractRenderInformation
 
     public function initRenderInformation(): RenderInformationInterface
     {
-        $this->monthsToRender = $this->getCalendarStartsAt()->month()->iterate(
-            $this->getCalendarEndsAt()->month(),
-            Interval::rightOpen())->all();
-        $this->numberOfMonthsToRender = count($this->monthsToRender);
+        $calendarPeriod = CarbonPeriod::instance($this->getCalendarPeriod());
+        $calendarPeriod
+            ->setDateInterval(1, Unit::Month)
+            ->excludeStartDate(true);
+        $this->numberOfMonthsToRender = count($calendarPeriod);
 
         return $this;
     }
@@ -77,10 +75,5 @@ class LandscapeYearInformation extends AbstractRenderInformation
     {
         $this->maxRowsToRender = $maxRowsToRender;
         return $this;
-    }
-
-    public function getMonthsToRender(): array
-    {
-        return $this->monthsToRender;
     }
 }
