@@ -2,7 +2,6 @@
 
 namespace Calendar\Pdf\Renderer\Renderer\RenderInformation;
 
-use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Carbon\CarbonPeriod;
 

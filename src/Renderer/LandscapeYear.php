@@ -102,7 +102,7 @@ class LandscapeYear implements RendererInterface
 
         $includeYear = !$this->renderInformation->doesCrossYear();
 
-        $headerPeriod = $this->getRenderInformation()->getCalendarPeriod();
+        $headerPeriod = $this->renderInformation->getCalendarPeriod();
         $headerPeriod->setDateInterval(1, Unit::Month);
         /** @var CarbonInterface $date */
         foreach ($headerPeriod as $date) {
@@ -134,7 +134,7 @@ class LandscapeYear implements RendererInterface
         );
         $startHeight = $this->renderInformation->getTop() + $this->renderInformation->getHeaderHeight();
 
-        $dataPeriod = $this->getRenderInformation()->getCalendarPeriod();
+        $dataPeriod = $this->renderInformation->getCalendarPeriod();
         $dataPeriod->setDateInterval(1, Unit::Month);
         /** @var CarbonInterface $month */
         foreach ($dataPeriod as $month) {
