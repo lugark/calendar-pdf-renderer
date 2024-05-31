@@ -100,16 +100,17 @@ class LandscapeYear implements RendererInterface
             0,
         );
 
-        $includeYear = !$this->renderInformation->doesCrossYear();
-
         $headerPeriod = $this->renderInformation->getCalendarPeriod();
         $headerPeriod->setDateInterval(1, Unit::Month);
+        $headerPeriod->excludeEndDate(true);
+
         /** @var CarbonInterface $date */
         foreach ($headerPeriod as $date) {
             $date->locale('de_DE');
-            $monthText = $date->isoFormat(RenderUtils::ICU_STAND_ALONE_MONTH_FULL);
-            $monthText = !$this->renderInformation->doesCrossYear() ?: $monthText.' `'.$date->isoFormat('y');
-
+            $monthText = $date->isoFormat('MMMM');
+            if ($this->renderInformation->doesCrossYear()) {
+                $monthText .= ' `'.$date->isoFormat('YY');
+            }
             $this->pdfRenderer->writeTextInCell(
                 $cellStyle,
                 $this->renderInformation->getColumnWidth() ,

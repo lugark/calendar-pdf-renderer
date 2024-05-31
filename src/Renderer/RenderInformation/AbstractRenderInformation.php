@@ -49,7 +49,9 @@ abstract class AbstractRenderInformation implements RenderInformationInterface
     public function setCalendarPeriod(CarbonPeriod $carbonPeriod): RenderInformationInterface
     {
         $this->carbonPeriod = $carbonPeriod;
-        $this->crossYear = $carbonPeriod->getStartDate()->year != $carbonPeriod->getEndDate()->year;
+        $this->carbonPeriod->excludeEndDate(true);
+        $this->crossYear = $carbonPeriod->getIncludedStartDate()->year != $carbonPeriod->getIncludedEndDate()->year;
+        $this->carbonPeriod->excludeEndDate(false);
 
         return $this;
     }
