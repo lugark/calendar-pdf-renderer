@@ -183,7 +183,7 @@ class LandscapeYear implements RendererInterface
 
     public function getRenderInformation(): LandscapeYearInformation
     {
-        return new LandscapeYearInformation();
+        return $this->renderInformation;
     }
 
     /**

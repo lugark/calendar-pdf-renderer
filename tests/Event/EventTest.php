@@ -82,4 +82,15 @@ class EventTest extends TestCase
         $eventTest = Event::fromArray(['start' => $start, 'end' => $end, 'name' => 'Test'], Types::EVENT_TYPE_CUSTOM);
         self::assertEquals($isInRange, $eventTest->isInRange($testStart, $testEnd));
     }
+    public function testInRangeNoEnd()
+    {
+        $eventTest = Event::fromArray(['start' => '2017-01-01 10:00:00', 'name' => 'Test'], Types::EVENT_TYPE_CUSTOM);
+        self::assertEquals(true, $eventTest->isInRange(Carbon::create('2017-01-01 07:00:00'), Carbon::create('2017-01-02 07:00:00')));
+    }    
+
+    public function testInRangeNoPeriodSet()
+    {
+        $eventTest = new Event(Types::EVENT_TYPE_CUSTOM);
+        self::assertEquals(false, $eventTest->isInRange(Carbon::create('2017-01-01 07:00:00'), Carbon::create('2017-01-02 07:00:00')));
+    }    
 }

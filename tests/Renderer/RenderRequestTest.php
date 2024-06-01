@@ -13,11 +13,6 @@ class RenderRequestTest extends TestCase
 {
     protected RenderRequest $sut;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public static function renderRequestProvider()
     {
         return [
