@@ -139,10 +139,13 @@ class LandscapeYear implements RendererInterface
         $dataPeriod->setDateInterval(1, Unit::Month);
         /** @var CarbonInterface $month */
         foreach ($dataPeriod as $month) {
-            $monthPeriod = CarbonPeriod::create($month->firstOfMonth(), $month->lastOfMonth());
+            $monthPeriod = CarbonPeriod::create(
+                $month->firstOfMonth()->toDateString(), 
+                $month->lastOfMonth()->toDateString()
+            );
             foreach ($monthPeriod as $day) {
                 $day->locale('de_DE');
-                $text = $day->day . ' ' . $day->isoFormat(RenderUtils::ICU_STAND_ALONE_DOW_SHORT);
+                $text = $day->day . ' ' . $day->isoFormat('ddd');
 
                 $colorData = $this->getDayColorData($day);
                 $cellStyle->setFill($colorData['fill']); 
