@@ -104,7 +104,10 @@ class LandscapeYear implements RendererInterface
         $headerPeriod->setDateInterval(1, Unit::Month);
         $headerPeriod->excludeEndDate(true);
 
-        /** @var CarbonInterface $date */
+        /** 
+         * @var CarbonInterface $date 
+         * @phpstan-ignore foreach.nonIterable
+        */
         foreach ($headerPeriod as $date) {
             $date->locale('de_DE');
             $monthText = $date->isoFormat('MMMM');
@@ -137,12 +140,16 @@ class LandscapeYear implements RendererInterface
 
         $dataPeriod = $this->renderInformation->getCalendarPeriod();
         $dataPeriod->setDateInterval(1, Unit::Month);
-        /** @var CarbonInterface $month */
+        /** 
+         * @var CarbonInterface $month 
+         * @phpstan-ignore foreach.nonIterable
+         */
         foreach ($dataPeriod as $month) {
             $monthPeriod = CarbonPeriod::create(
                 $month->firstOfMonth()->toDateString(),
                 $month->lastOfMonth()->toDateString()
             );
+            /** @phpstan-ignore foreach.nonIterable */
             foreach ($monthPeriod as $day) {
                 $day->locale('de_DE');
                 $text = $day->day . ' ' . $day->isoFormat('ddd');

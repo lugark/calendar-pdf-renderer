@@ -3,6 +3,7 @@
 namespace Calendar\Pdf\Renderer\Tests\Event;
 
 use Calendar\Pdf\Renderer\Event\Event;
+use Calendar\Pdf\Renderer\Event\EventException;
 use Calendar\Pdf\Renderer\Event\Types;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -92,5 +93,18 @@ class EventTest extends TestCase
     {
         $eventTest = new Event(Types::EVENT_TYPE_CUSTOM);
         self::assertEquals(false, $eventTest->isInRange(Carbon::create('2017-01-01 07:00:00'), Carbon::create('2017-01-02 07:00:00')));
+    }    
+
+    public function testFromArrayNoName()
+    {
+        $this->expectException(EventException::class);
+        $this->expectExceptionMessage('Data for event does not have a name!');
+        Event::fromArray([], Types::EVENT_TYPE_CUSTOM);
+    }
+    public function testFromArrayNoStartDate()
+    {
+        $this->expectException(EventException::class);
+        $this->expectExceptionMessage('No start date found for Event!');
+        Event::fromArray(['name' => 'Test', 'date'=>null], Types::EVENT_TYPE_CUSTOM);
     }    
 }

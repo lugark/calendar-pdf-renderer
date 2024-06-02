@@ -4,6 +4,8 @@ namespace Calendar\Pdf\Renderer\Tests\Renderer\RenderInformation;
 
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
 use Carbon\CarbonPeriod;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -59,4 +61,32 @@ class LandscapeYearInformationTest extends TestCase
         $this->sut->setMaxRowsToRender(5);
         $this->assertEquals(5, $this->sut->getMaxRowsToRender());
     }
+
+    public static function getPeriodData()
+    {
+        return [
+            [
+                CarbonPeriod::create('1-1-1976', '1-2-1976'),
+                false,
+                Carbon::create('1-1-1976'),
+                Carbon::create('1-2-1976')
+            ],
+            [
+                CarbonPeriod::create('1-1-1976', '1-2-1977'),
+                true,
+                Carbon::create('1-1-1976'),
+                Carbon::create('1-2-1977')
+            ],
+        ];
+    }
+
+    #[DataProvider('getPeriodData')]
+    public function testPeriodSettings($period, $expectedCrossYear, CarbonInterface $expectedStart, CarbonInterface $expectedEnd)
+    {
+        $this->sut->setCalendarPeriod($period);
+        $this->assertEquals($period, $this->sut->getCalendarPeriod());
+        $this->assertEquals($expectedStart, $this->sut->getCalendarStartsAt());
+        $this->assertEquals($expectedEnd, $this->sut->getCalendarEndsAt());
+        $this->assertEquals($expectedCrossYear, $this->sut->doesCrossYear());
+    }    
 }

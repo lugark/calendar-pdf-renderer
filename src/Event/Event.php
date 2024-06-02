@@ -81,11 +81,6 @@ class Event
         return $this->eventPriod->getEndDate();
     }
 
-    public function getEndMonthAsNumber(): int
-    {
-        return $this->eventPriod->getEndDate()->month;
-    }
-
     /**
      * @param array<mixed> $data
      */

@@ -7,7 +7,6 @@
         "ext-intl": "*",
         "php": "^8.2",
         "mpdf/mpdf": "^8.1",
-        "aeon-php/calendar": "^1.0",
         "setasign/fpdf": "^1.8",
         "nesbot/carbon": "^3.4"
     },
