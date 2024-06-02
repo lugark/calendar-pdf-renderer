@@ -51,7 +51,7 @@ class EventsTest extends TestCase
         foreach ($this->sut as $event) {
             $iterationCount++;
         }
-        self::assertEquals(count($events), $iterationCount);
+        self::assertEquals($iterationCount, count($events));
     }
 
     public function testWrongEventSet()

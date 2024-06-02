@@ -140,7 +140,7 @@ class LandscapeYear implements RendererInterface
         /** @var CarbonInterface $month */
         foreach ($dataPeriod as $month) {
             $monthPeriod = CarbonPeriod::create(
-                $month->firstOfMonth()->toDateString(), 
+                $month->firstOfMonth()->toDateString(),
                 $month->lastOfMonth()->toDateString()
             );
             foreach ($monthPeriod as $day) {

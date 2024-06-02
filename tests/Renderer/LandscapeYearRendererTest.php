@@ -45,5 +45,8 @@ class LandscapeYearRendererTest extends TestCase
         self::assertEquals(Carbon::create('01-01-2024'), $renderInformation->getCalendarStartsAt());
         self::assertEquals(Carbon::create('01-01-2025'), $renderInformation->getCalendarEndsAt());
         self::assertEquals(12, $renderInformation->numberOfMonthsToRender());
+        self::assertEquals(LandscapeYear::HEADER_HEIGHT, $renderInformation->getHeaderHeight());
+        self::assertEquals(23.917, $renderInformation->getColumnWidth());
+        self::assertEquals(5.935, $renderInformation->getRowHeight());
     }
 }
