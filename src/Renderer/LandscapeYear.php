@@ -16,11 +16,11 @@ use Calendar\Pdf\Renderer\Renderer\StyleSettings\FontStyle;
 
 class LandscapeYear implements RendererInterface
 {
-    CONST FONT_SIZE_HEADER = 8;
-    CONST FONT_SIZE_CELL = 6;
-    CONST COLOR_TEXT_HEADER = '#c63131';
+    const FONT_SIZE_HEADER = 8;
+    const FONT_SIZE_CELL = 6;
+    const COLOR_TEXT_HEADER = '#c63131';
     const COLOR_BORDER_TABLE = '#c63131';
-    CONST COLOR_BORDER_HEADER = '#DEDEDE';
+    const COLOR_BORDER_HEADER = '#DEDEDE';
     const COLOR_FILL_SA = '#F8E6E6';
     const COLOR_FILL_SO = '#F3D5D5';
 
@@ -77,7 +77,7 @@ class LandscapeYear implements RendererInterface
 
         $this->pdfRenderer->drawColoredRectangle(
             self::COLOR_BORDER_TABLE,
-            $this->renderInformation->getLeft()-2,
+            $this->renderInformation->getLeft() - 2,
             $this->renderInformation->getTop(),
             $this->renderInformation->numberOfMonthsToRender() * $this->renderInformation->getColumnWidth() + 2,
             31 * $this->renderInformation->getRowHeight() + self::HEADER_HEIGHT + 2
@@ -93,9 +93,9 @@ class LandscapeYear implements RendererInterface
     {
         $cellStyle = new CellStyle(
             new FontStyle('', 'B', self::FONT_SIZE_HEADER),
-            self::COLOR_TEXT_HEADER, 
+            self::COLOR_TEXT_HEADER,
             null,
-            self::COLOR_BORDER_HEADER, 
+            self::COLOR_BORDER_HEADER,
             'C',
             0,
         );
@@ -104,20 +104,20 @@ class LandscapeYear implements RendererInterface
         $headerPeriod->setDateInterval(1, Unit::Month);
         $headerPeriod->excludeEndDate(true);
 
-        /** 
-         * @var CarbonInterface $date 
+        /**
+         * @var CarbonInterface $date
          * @phpstan-ignore foreach.nonIterable
-        */
+         */
         foreach ($headerPeriod as $date) {
             $date->locale('de_DE');
             $monthText = $date->isoFormat('MMMM');
             if ($this->renderInformation->doesCrossYear()) {
-                $monthText .= ' `'.$date->isoFormat('YY');
+                $monthText .= ' `' . $date->isoFormat('YY');
             }
             $this->pdfRenderer->writeTextInCell(
                 $cellStyle,
-                $this->renderInformation->getColumnWidth() ,
-                self::HEADER_HEIGHT ,
+                $this->renderInformation->getColumnWidth(),
+                self::HEADER_HEIGHT,
                 $monthText
             );
         }
@@ -130,9 +130,9 @@ class LandscapeYear implements RendererInterface
     {
         $cellStyle = new CellStyle(
             new FontStyle('', 'B', self::FONT_SIZE_CELL),
-            '#000000', 
-            'B', 
-            self::COLOR_BORDER_HEADER, 
+            '#000000',
+            'B',
+            self::COLOR_BORDER_HEADER,
             'L',
             0,
         );
@@ -140,8 +140,8 @@ class LandscapeYear implements RendererInterface
 
         $dataPeriod = $this->renderInformation->getCalendarPeriod();
         $dataPeriod->setDateInterval(1, Unit::Month);
-        /** 
-         * @var CarbonInterface $month 
+        /**
+         * @var CarbonInterface $month
          * @phpstan-ignore foreach.nonIterable
          */
         foreach ($dataPeriod as $month) {
@@ -155,13 +155,13 @@ class LandscapeYear implements RendererInterface
                 $text = $day->day . ' ' . $day->isoFormat('ddd');
 
                 $colorData = $this->getDayColorData($day);
-                $cellStyle->setFill($colorData['fill']); 
+                $cellStyle->setFill($colorData['fill']);
                 $cellStyle->setFillColor($colorData['hexColor']);
                 $this->pdfRenderer->writeTextInCellAtXY(
                     $cellStyle,
                     $this->renderInformation->getLeft() + (($month->month - 1) * $this->renderInformation->getColumnWidth()),
                     $startHeight + (($day->day - 1) * $this->renderInformation->getRowHeight()),
-                    $this->renderInformation->getColumnWidth()-1,
+                    $this->renderInformation->getColumnWidth() - 1,
                     $this->renderInformation->getRowHeight(),
                     $text
                 );
@@ -173,7 +173,7 @@ class LandscapeYear implements RendererInterface
     {
         $colorData = [
             'fill' => false,
-            'color' => [0,0,0],
+            'color' => [0, 0, 0],
             'hexColor' => ''
         ];
 
@@ -210,13 +210,13 @@ class LandscapeYear implements RendererInterface
         $landscapeRenderInformation
             ->setHeaderHeight(self::HEADER_HEIGHT)
             ->setColumnWidth(round(
-                ($canvasSizeX-(self::MARGIN_LEFT + self::MARGIN_RIGHT)) /
+                ($canvasSizeX - (self::MARGIN_LEFT + self::MARGIN_RIGHT)) /
                 $landscapeRenderInformation->numberOfMonthsToRender(),
                 3
             ))
             ->setRowHeight(
                 round(
-                    ($canvasSizeY-(self::CALENDAR_START_XY + self::HEADER_HEIGHT)) /
+                    ($canvasSizeY - (self::CALENDAR_START_XY + self::HEADER_HEIGHT)) /
                     $landscapeRenderInformation->getMaxRowsToRender(),
                     3
                 ));
