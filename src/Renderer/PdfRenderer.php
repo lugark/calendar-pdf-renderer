@@ -12,22 +12,21 @@ use Calendar\Pdf\Renderer\Service\RenderUtils;
 
 class PdfRenderer
 {
-    protected ?Mpdf $mpdf=null;
+    protected ?Mpdf $mpdf = null;
 
     /**
      * @throws MpdfException
      */
     private function initMpdf(
-        array $options=[],
-        string $displaymode='fullpage',
-        string $font='Helvetica',
+        array $options = [],
+        string $displaymode = 'fullpage',
+        string $font = 'Helvetica',
         bool $addPage = true
-    ): void
-    {
+    ): void {
         $this->mpdf = new Mpdf($options);
 
         $this->mpdf->setLogger(new class extends AbstractLogger {
-            public function log($level, $message, $context=[]): void
+            public function log($level, $message, $context = []): void
             {
                 echo $level . ': ' . $message . PHP_EOL;
             }
@@ -51,7 +50,7 @@ class PdfRenderer
             'margin_left' => $pdfSettings->getMarginLeft(),
             'margin_right' => $pdfSettings->getMarginRight(),
             'margin_top' => $pdfSettings->getMarginTop(),
-            'margin_bottom' => $pdfSettings->getMarginBottom(),            
+            'margin_bottom' => $pdfSettings->getMarginBottom(),
         ]);
     }
 
@@ -123,7 +122,7 @@ class PdfRenderer
         float $width,
         float $height,
         string $text
-    ):void {
+    ): void {
         $this->setFont($cellStyle->getFontStyle());
         $this->setBorderColor($cellStyle->getBorderColorHex());
         $this->setTextColor($cellStyle->getTextColorHex());
@@ -150,7 +149,7 @@ class PdfRenderer
         float $width,
         float $height,
         string $text
-    ):void {
+    ): void {
         $this->setFont($cellStyle->getFontStyle());
         $this->setBorderColor($cellStyle->getBorderColorHex());
         $this->setTextColor($cellStyle->getTextColorHex());
@@ -190,7 +189,7 @@ class PdfRenderer
 
     private function setTextColor(?string $textColorHex): void
     {
-        if (!empty($textColorHex)) {            
+        if (!empty($textColorHex)) {
             $textColor = RenderUtils::hex2rgb($textColorHex);
             $this->mpdf->SetTextColor($textColor[0], $textColor[1], $textColor[2]);
         }
@@ -198,7 +197,7 @@ class PdfRenderer
 
     private function setFillColor(?string $fillColorHex): void
     {
-        if (!empty($fillColorHex)) {            
+        if (!empty($fillColorHex)) {
             $fillColor = RenderUtils::hex2rgb($fillColorHex);
             $this->mpdf->SetFillColor($fillColor[0], $fillColor[1], $fillColor[2]);
         }
