@@ -54,14 +54,12 @@ class CalendarRendererTest extends TestCase
     #[DataProvider('getSupportedRendererData')]
     public function testInitEventRendererSuccess($supported, $countAdded)
     {
-        $mockRenderer = $this->getMockBuilder(RendererInterface::class)
-            ->getMock();
+        $mockRenderer = $this->createMock(RendererInterface::class);
         $mockRenderer->method('getSupportedEventRenderer')
             ->willReturn($supported);
 
-        $mpdfMock = $this->getMockBuilder(Mpdf::class)
-            ->getMock();
-        $pdfGeneratorMock = $this->getMockBuilder(PdfRenderer::class)->getMock();
+        $mpdfMock = $this->createMock(Mpdf::class);
+        $pdfGeneratorMock = $this->createMock(PdfRenderer::class);
         $pdfGeneratorMock->method('getPdfGenerator')->willReturn($mpdfMock);
 
         $result = CalendarRenderer::initEventRenderer($mockRenderer, $pdfGeneratorMock);
@@ -87,13 +85,11 @@ class CalendarRendererTest extends TestCase
     public function testInitEventRendererFail()
     {
         $this->expectExceptionMessage('Not a supported event type renderer');
-        $mpdfMock = $this->getMockBuilder(Mpdf::class)
-            ->getMock();
-        $pdfGeneratorMock = $this->getMockBuilder(PdfRenderer::class)->getMock();
+        $mpdfMock = $this->createMock(Mpdf::class);
+        $pdfGeneratorMock = $this->createMock(PdfRenderer::class);
         $pdfGeneratorMock->method('getPdfGenerator')->willReturn($mpdfMock);
 
-        $mockRenderer = $this->getMockBuilder(RendererInterface::class)
-            ->getMock();
+        $mockRenderer = $this->createMock(RendererInterface::class);
         $mockRenderer->method('getSupportedEventRenderer')
             ->willReturn([TestCase::class]);
 
