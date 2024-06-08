@@ -2,8 +2,8 @@
 
 namespace Calendar\Pdf\Renderer\Renderer\RenderInformation;
 
-use Aeon\Calendar\Gregorian\DateTime;
-use Aeon\Calendar\Gregorian\TimePeriod;
+use Carbon\CarbonInterface;
+use Carbon\CarbonPeriod;
 
 abstract class AbstractRenderInformation implements RenderInformationInterface
 {
@@ -13,7 +13,7 @@ abstract class AbstractRenderInformation implements RenderInformationInterface
 
     private bool $crossYear = false;
 
-    private TimePeriod $timePeriod;
+    private CarbonPeriod $carbonPeriod;
 
     public function getTop(): float
     {
@@ -36,20 +36,22 @@ abstract class AbstractRenderInformation implements RenderInformationInterface
         return $this;
     }
 
-    public function getCalendarStartsAt(): DateTime
+    public function getCalendarStartsAt(): CarbonInterface
     {
-        return $this->timePeriod->start();
+        return $this->carbonPeriod->getStartDate();
     }
 
-    public function getCalendarEndsAt(): DateTime
+    public function getCalendarEndsAt(): CarbonInterface
     {
-        return $this->timePeriod->end();
+        return $this->carbonPeriod->getEndDate();
     }
 
-    public function setCalendarPeriod(TimePeriod $timePeriod): RenderInformationInterface
+    public function setCalendarPeriod(CarbonPeriod $carbonPeriod): RenderInformationInterface
     {
-        $this->timePeriod = $timePeriod;
-        $this->crossYear = $timePeriod->start()->year()->number() != $timePeriod->end()->year()->number();
+        $this->carbonPeriod = $carbonPeriod;
+        $this->carbonPeriod->excludeEndDate(true);
+        $this->crossYear = $carbonPeriod->getIncludedStartDate()->year != $carbonPeriod->getIncludedEndDate()->year;
+        $this->carbonPeriod->excludeEndDate(false);
 
         return $this;
     }
@@ -59,8 +61,8 @@ abstract class AbstractRenderInformation implements RenderInformationInterface
         return $this->crossYear;
     }
 
-    public function getTimePeriod(): TimePeriod
+    public function getCalendarPeriod(): CarbonPeriod
     {
-        return $this->timePeriod;
+        return $this->carbonPeriod;
     }
 }

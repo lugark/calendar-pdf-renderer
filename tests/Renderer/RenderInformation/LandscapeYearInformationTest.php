@@ -2,10 +2,11 @@
 
 namespace Calendar\Pdf\Renderer\Tests\Renderer\RenderInformation;
 
-use Aeon\Calendar\Gregorian\DateTime;
-use Aeon\Calendar\Gregorian\Interval;
-use Aeon\Calendar\Gregorian\TimePeriod;
 use Calendar\Pdf\Renderer\Renderer\RenderInformation\LandscapeYearInformation;
+use Carbon\CarbonPeriod;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class LandscapeYearInformationTest extends TestCase
@@ -18,43 +19,40 @@ class LandscapeYearInformationTest extends TestCase
         $this->sut = new LandscapeYearInformation();
     }
 
-    public function provideRenderInformationData()
+    public static function provideRenderInformationData()
     {
         return [
-            [
-                new TimePeriod(DateTime::fromString('1-1-1976'), DateTime::fromString('1-2-1976')),
-                1
-            ],
-            [
-                new TimePeriod(DateTime::fromString('1-1-1976'), DateTime::fromString('3-2-1978')),
-                25
-            ],
-            [
-                new TimePeriod(DateTime::fromString('1-1-1976'), DateTime::fromString('1-1-1977')),
-                12
-            ],
-            [
-                new TimePeriod(DateTime::fromString('1-1-1976'), DateTime::fromString('2-2-1978')),
-                25
-            ],
+            'oneMonth' =>
+                [
+                    new CarbonPeriod(new \DateTime('1-1-1976'), new \DateTime('1-2-1976')),
+                    1
+                ],
+            '25Month' =>
+                [
+                    new CarbonPeriod(new \DateTime('1-1-1976'), new \DateTime('3-2-1978')),
+                    25
+                ],
+            '12Month' =>
+                [
+                    new CarbonPeriod(new \DateTime('1-1-1976'), new \DateTime('1-1-1977')),
+                    12
+                ],
+            '25Month2' =>
+                [
+                    new CarbonPeriod(new \DateTime('1-1-1976'), new \DateTime('2-2-1978')),
+                    25
+                ],
         ];
     }
 
-    /** @dataProvider provideRenderInformationData */
+    #[DataProvider('provideRenderInformationData')]
     public function testInitRenderInformation($period, $expectedMonths)
     {
-        /** @var TimePeriod $period */
-        $expectedMonthArray = $period->start()->month()->iterate(
-          $period->end()->month(),
-          Interval::rightOpen()
-        )->all();
-
         $this->sut->setCalendarPeriod($period);
         $this->assertEquals(12, $this->sut->numberOfMonthsToRender());
 
         $this->sut->initRenderInformation();
         $this->assertEquals($expectedMonths, $this->sut->numberOfMonthsToRender());
-        $this->assertEquals($expectedMonthArray, $this->sut->getMonthsToRender());
     }
 
     public function testMaxRows()
@@ -63,4 +61,32 @@ class LandscapeYearInformationTest extends TestCase
         $this->sut->setMaxRowsToRender(5);
         $this->assertEquals(5, $this->sut->getMaxRowsToRender());
     }
+
+    public static function getPeriodData()
+    {
+        return [
+            [
+                CarbonPeriod::create('1-1-1976', '1-2-1976'),
+                false,
+                Carbon::create('1-1-1976'),
+                Carbon::create('1-2-1976')
+            ],
+            [
+                CarbonPeriod::create('1-1-1976', '1-2-1977'),
+                true,
+                Carbon::create('1-1-1976'),
+                Carbon::create('1-2-1977')
+            ],
+        ];
+    }
+
+    #[DataProvider('getPeriodData')]
+    public function testPeriodSettings($period, $expectedCrossYear, CarbonInterface $expectedStart, CarbonInterface $expectedEnd)
+    {
+        $this->sut->setCalendarPeriod($period);
+        $this->assertEquals($period, $this->sut->getCalendarPeriod());
+        $this->assertEquals($expectedStart, $this->sut->getCalendarStartsAt());
+        $this->assertEquals($expectedEnd, $this->sut->getCalendarEndsAt());
+        $this->assertEquals($expectedCrossYear, $this->sut->doesCrossYear());
+    }    
 }

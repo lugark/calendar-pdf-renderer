@@ -12,9 +12,10 @@ use Calendar\Pdf\Renderer\Renderer\LandscapeYear;
 use Calendar\Pdf\Renderer\Renderer\PdfRenderer;
 use Calendar\Pdf\Renderer\Renderer\RendererInterface;
 use Calendar\Pdf\Renderer\Renderer\RenderRequest;
+use Closure;
 use Mpdf\Mpdf;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use setasign\Fpdi\PdfReader\PdfReader;
 
 class StubCalRenderer extends CalendarRenderer
 {
@@ -50,9 +51,7 @@ class CalendarRendererTest extends TestCase
         self::assertInstanceOf(LandscapeYear::class, $result);
     }
 
-    /**
-     * @dataProvider getSupportedRendererData
-     */
+    #[DataProvider('getSupportedRendererData')]
     public function testInitEventRendererSuccess($supported, $countAdded)
     {
         $mockRenderer = $this->getMockBuilder(RendererInterface::class)
@@ -69,7 +68,7 @@ class CalendarRendererTest extends TestCase
         self::assertTrue($result instanceof EventRenderer);
 
         // Create a closure from a callable and bind it to MyClass.
-        $closure = \Closure::bind(function (EventRenderer $result) {
+        $closure = Closure::bind(function (EventRenderer $result) {
             return $result->renderer;
         }, null, EventRenderer::class);
 
@@ -77,7 +76,7 @@ class CalendarRendererTest extends TestCase
     }
 
 
-    public function getSupportedRendererData()
+    public static function getSupportedRendererData()
     {
         return [
             'successWithOne' => [[PublicHolidayRenderer::class], 1],
@@ -87,7 +86,7 @@ class CalendarRendererTest extends TestCase
 
     public function testInitEventRendererFail()
     {
-        $this->expectErrorMessage('Not a supported event type renderer');
+        $this->expectExceptionMessage('Not a supported event type renderer');
         $mpdfMock = $this->getMockBuilder(Mpdf::class)
             ->getMock();
         $pdfGeneratorMock = $this->getMockBuilder(PdfRenderer::class)->getMock();
@@ -101,9 +100,8 @@ class CalendarRendererTest extends TestCase
         $result = CalendarRenderer::initEventRenderer($mockRenderer, $pdfGeneratorMock);
     }
 
-    /**
-     * @dataProvider getEventsRenderEvents
-     */
+
+    #[DataProvider('getEventsRenderEvents')]
     public function testRenderEvents($events, $amountCalled)
     {
         // TODO: fix unittest
@@ -127,11 +125,9 @@ class CalendarRendererTest extends TestCase
         $sut->renderEvents($request);
     }
 
-    public function getEventsRenderEvents()
+    public static function getEventsRenderEvents()
     {
-        $event = new Event(Types::EVENT_TYPE_PUBLIC_HOLIDAY);
-        $event->setEventPeriod(new \DateTime());
-        $event->setText('TestEvent');
+        $event = Event::fromArray(['date' => '2017-01-01 10:00:00', 'name' => 'Test'], Types::EVENT_TYPE_PUBLIC_HOLIDAY);
         return [
             'zeroEvents' => [null, 0],
             'emptyEvents' => [[], 0],

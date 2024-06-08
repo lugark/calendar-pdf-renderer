@@ -35,24 +35,24 @@ class SchoolHolidayRenderer extends AbstractEventTypeRenderer
              ' - ' .  $event->getStart()->format('d.m.') . '-' . $event->getEnd()->format('d.m.') . PHP_EOL;
 
 
-        $startDay = $event->getStart()->day();
-        $endDay = $event->getEnd()->day();
-        $monthEnd = $endDay->month()->number();
+        $startDay = $event->getStart();
+        $endDay = $event->getEnd();
+        $monthEnd = $endDay->month;
         $pdfGenerator = $this->pdfRenderer->getPdfGenerator();
 
-        for ($i=$startDay->month()->number(); $i<=$monthEnd; $i++) {
+        for ($i=$startDay->month; $i<=$monthEnd; $i++) {
             $x = $calendarRenderInformation->getLeft() +
                 (($i - 1) * $calendarRenderInformation->getColumnWidth()) +
                 $calendarRenderInformation->getColumnWidth() - self::HOLIDAY_WIDTH - 1;
-            $y = ($startDay->number() - 1) * $calendarRenderInformation->getRowHeight() +
+            $y = ($startDay->day - 1) * $calendarRenderInformation->getRowHeight() +
                 $calendarRenderInformation->getTop() +
                 $calendarRenderInformation->getHeaderHeight();
 
             if ($i == $monthEnd) {
-                $days = $endDay->number() - $startDay->number() + 1;
+                $days = $endDay->day - $startDay->day + 1;
             } else {
-                $days = $startDay->month()->lastDay()->number() - $startDay->number() + 1;
-                $startDay = $startDay->plusMonths(1)->month()->firstDay();
+                $days = $startDay->endOfMonth()->day - $startDay->day + 1;
+                $startDay = $startDay->addMonth()->firstOfMonth();
             }
 
             $height = $days * $calendarRenderInformation->getRowHeight();

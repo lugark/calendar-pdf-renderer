@@ -2,61 +2,56 @@
 
 namespace Calendar\Pdf\Renderer\Tests\Event;
 
-use Aeon\Calendar\Gregorian\DateTime;
 use Calendar\Pdf\Renderer\Event\Event;
 use Calendar\Pdf\Renderer\Event\EventException;
 use Calendar\Pdf\Renderer\Event\Events;
 use Calendar\Pdf\Renderer\Event\Types;
+use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class EventsTest extends TestCase
 {
     /** @var Events */
-    private $sut;
+    private Events $sut;
 
-    public function getEventsTestData()
+    public static function getEventsTestData(): array
     {
         $events = array();
-        $start = new \DateTime('2017-01-01 10:00:00');
-        for ($i=0; $i<3; $i++) {
-            $end = clone $start;
-            $end->add(new \DateInterval('P2D'));
-            $event = new Event(Types::EVENT_TYPE_CUSTOM);
-            $event->setEventPeriod($start, $end);
-            $events[]=$event;
-            $start = $end;
-        }
+        $events[] = Event::fromArray(['start' => '2017-01-01 10:00:00', 'end'=> '2017-01-02 10:00:00', 'name' => 'Test'], Types::EVENT_TYPE_CUSTOM);
+        $events[] = Event::fromArray(['start' => '2017-01-02 10:00:00', 'end'=> '2017-01-03 10:00:00', 'name' => 'Test'], Types::EVENT_TYPE_CUSTOM);
+        $events[] = Event::fromArray(['start' => '2017-01-03 10:00:00', 'end'=> '2017-01-04 10:00:00', 'name' => 'Test'], Types::EVENT_TYPE_CUSTOM);
 
         return [
            'allWithin'  => [
                $events,
-               DateTime::fromString('2017-01-01 10:00:00'),
-               DateTime::fromString('2017-01-10 10:00:00'),
+               Carbon::create('2017-01-01 10:00:00'),
+               Carbon::create('2017-01-10 10:00:00'),
                3
            ]
         ];
     }
 
-    /** @dataProvider getEventsTestData */
+    #[DataProvider('getEventsTestData')]
     public function testEvents($events, $calendarStart, $calenderEnd, $count)
     {
         $this->sut = new Events($events);
-        $this->assertEquals(count($events), count($this->sut));
+        self::assertSameSize($events, $this->sut);
 
         $this->sut->addEvents($events);
-        $this->assertEquals(count($events)*2, count($this->sut));
+        self::assertEquals(count($events)*2, count($this->sut));
 
         $this->sut->setEvents($events);
-        $this->assertEquals(count($events), count($this->sut));
+        self::assertEquals(count($events), count($this->sut));
 
         $filteredEvents = $this->sut->getEventsByRange($calendarStart, $calenderEnd);
-        $this->assertEquals($count, count($filteredEvents));
+        self::assertEquals($count, count($filteredEvents));
 
         $iterationCount=0;
         foreach ($this->sut as $event) {
             $iterationCount++;
         }
-        $this->assertEquals(count($events), $iterationCount);
+        self::assertEquals($iterationCount, count($events));
     }
 
     public function testWrongEventSet()

@@ -3,6 +3,7 @@
 namespace Calendar\Pdf\Renderer\Event;
 
 use Aeon\Calendar\Gregorian\DateTime;
+use Carbon\CarbonInterface;
 
 class Events implements \IteratorAggregate, \Countable
 {
@@ -38,10 +39,9 @@ class Events implements \IteratorAggregate, \Countable
         return $this;
     }
 
-    public function getEventsByRange(DateTime $start, DateTime  $end): array
+    public function getEventsByRange(CarbonInterface $start, CarbonInterface  $end): array
     {
         return array_filter($this->events, function ($event) use ($start, $end) {
-            /** @var Event $event */
             return $event->isInRange($start, $end);
         });
     }

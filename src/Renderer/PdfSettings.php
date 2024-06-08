@@ -2,14 +2,14 @@
 
 namespace Calendar\Pdf\Renderer\Renderer;
 
-class PdfSettings
+readonly class PdfSettings
 {
     public function __construct(
         private string $paperFormat,
-        private int $marginRight,
-        private int $marginLeft,
-        private int $marginTop,
-        private int $marginBottom,
+        private int    $marginRight,
+        private int    $marginLeft,
+        private int    $marginTop,
+        private int    $marginBottom,
     ) {
     }
 

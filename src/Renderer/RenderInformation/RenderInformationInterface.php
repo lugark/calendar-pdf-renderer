@@ -4,6 +4,8 @@ namespace Calendar\Pdf\Renderer\Renderer\RenderInformation;
 
 use Aeon\Calendar\Gregorian\DateTime;
 use Aeon\Calendar\Gregorian\TimePeriod;
+use Carbon\CarbonInterface;
+use Carbon\CarbonPeriod;
 
 interface RenderInformationInterface
 {
@@ -12,11 +14,11 @@ interface RenderInformationInterface
     public function getLeft(): float;
     public function setLeft(float $left): RenderInformationInterface;
 
-    public function getCalendarStartsAt(): DateTime;
-    public function getCalendarEndsAt(): DateTime;
-    public function setCalendarPeriod(TimePeriod $timePeriod): RenderInformationInterface;
+    public function getCalendarStartsAt(): CarbonInterface;
+    public function getCalendarEndsAt(): CarbonInterface;
+    public function setCalendarPeriod(CarbonPeriod $carbonPeriod): RenderInformationInterface;
     public function doesCrossYear():bool;
-    public function getTimePeriod(): TimePeriod;
+    public function getCalendarPeriod(): CarbonPeriod;
 
     public function initRenderInformation(): RenderInformationInterface;
 }

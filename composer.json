@@ -5,17 +5,17 @@
     "license": "MIT",
     "require": {
         "ext-intl": "*",
-        "php": "^8.1",
+        "php": "^8.2",
         "mpdf/mpdf": "^8.1",
-        "aeon-php/calendar": "^1.0",
-        "setasign/fpdf": "^1.8"
+        "setasign/fpdf": "^1.8",
+        "nesbot/carbon": "^3.4"
     },
     "require-dev": {
-        "symfony/http-kernel": "^5.4 || ^6.0",
-        "symfony/dependency-injection": "^5.4",
-        "phpstan/phpstan": "^1.8",
-        "symfony/phpunit-bridge": "^6.1",
-        "phpstan/phpstan-symfony": "^1.2"
+        "symfony/http-kernel": "^6.4",
+        "symfony/dependency-injection": "^6.4",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-symfony": "^1.4",
+        "phpunit/phpunit": "^11.1"
     },
     "suggest": {
         "symfony/dependency-injection": "",
@@ -32,8 +32,9 @@
         }
     },
     "scripts": {
-        "phpunit": "vendor/bin/simple-phpunit -c phpunit.xml.dist",
+        "phpunit": "vendor/bin/phpunit -c phpunit.xml.dist",
         "phpstan": "vendor/bin/phpstan analyze -c phpstan.neon --memory-limit 2G",
+        "phpunit-coverage": "vendor/bin/phpunit  --coverage-clover reports/coverage.xml --log-junit reports/phpunit_report.xml",
         "test": [
             "@phpstan",
             "@phpunit"

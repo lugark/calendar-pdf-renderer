@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "master"
+      - "feature/**"
+  pull_request:
+
+jobs:
+  tests:
+    uses: lugark/calendar-pdf-renderer/.github/workflows/symfony.yml@feature/replace_aeon_with_carbon 
+
+  codecov:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        name: Download reports-artifacts
+        with:
+          name: test-reports
+      - name: Send code coverage report to Codecov.io
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests # optional
+          files: ./coverage.xml
+          fail_ci_if_error: true
+          verbose: true
+
+  sonarcloud:
+    needs: tests
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: actions/download-artifact@v4
+        name: Download reports-artifacts
+        with:
+          name: test-reports          
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

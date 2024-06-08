@@ -5,6 +5,7 @@ namespace Calendar\Pdf\Renderer\Renderer;
 use Aeon\Calendar\Gregorian\TimePeriod;
 use Aeon\Calendar\Gregorian\DateTime;
 use Calendar\Pdf\Renderer\Event\Events;
+use Carbon\CarbonPeriod;
 use DateInterval;
 
 class RenderRequest
@@ -12,7 +13,7 @@ class RenderRequest
     const DEFAULT_RENDERED_MONTHS = 12;
     const DEFAULT_RENDERED_YEAR = 1;
 
-    protected TimePeriod $period;
+    protected CarbonPeriod $calendarPeriod;
     protected string $requestType;
     protected bool $renderToFile = true;
     protected string $renderFile = 'calendar.pdf';
@@ -30,14 +31,12 @@ class RenderRequest
         }
 
         $this->requestType = $requestType;
-        $this->period = new TimePeriod(
-            DateTime::fromDateTime($startDate),
-            DateTime::fromDateTime($endDate));
+        $this->calendarPeriod = new CarbonPeriod($startDate, $endDate);
     }
 
-    public function getPeriod(): TimePeriod
+    public function getPeriod(): CarbonPeriod
     {
-        return $this->period;
+        return $this->calendarPeriod;
     }
 
     public function getRequestType(): string
