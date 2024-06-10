@@ -12,7 +12,7 @@
     },
     "require-dev": {
         "symfony/http-kernel": "^6.4",
-        "symfony/dependency-injection": "^6.4",
+        "symfony/dependency-injection": "^6.4 || ^7.0",
         "phpstan/phpstan": "^1.11",
         "phpstan/phpstan-symfony": "^1.4",
         "phpunit/phpunit": "^11.1"
